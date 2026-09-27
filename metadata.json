@@ -1,0 +1,6 @@
+{
+  "name": "ChitraLekh",
+  "description": "Professional Hindi text on photo editor with artistic typography, styles, filters, quotes & export",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
