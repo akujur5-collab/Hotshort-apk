@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.db.AppDatabase
 import com.example.data.db.ProjectEntity
 import com.example.data.db.ProjectRepository
+import com.example.data.model.BibleVerse
 import com.example.data.model.CanvasRatio
 import com.example.data.model.CanvasTextAlign
 import com.example.data.model.HindiFont
@@ -168,6 +169,41 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                 baseBitmap = null,
                 backgroundStartColor = startColor,
                 backgroundEndColor = endColor,
+                textLayers = listOf(newLayer),
+                selectedTextLayerId = newLayer.id,
+                ratio = CanvasRatio.RATIO_1_1
+            )
+        }
+    }
+
+    fun applyBibleVerse(
+        verse: BibleVerse,
+        language: String = "hi"
+    ) {
+        val preset = PresetRepository.PRESETS.find { it.id == verse.presetId } ?: PresetRepository.PRESETS[0]
+        val formattedText = when (language) {
+            "en" -> "${verse.verseEnglish}\n\n— ${verse.referenceEnglish}"
+            "both" -> "${verse.verseHindi}\n\n\"${verse.verseEnglish}\"\n\n— ${verse.referenceHindi}"
+            else -> "${verse.verseHindi}\n\n— ${verse.referenceHindi}"
+        }
+        val newLayer = TextLayer(
+            text = formattedText,
+            font = HindiFont.ROZHA_ONE,
+            textColor = preset.textColor,
+            shadow = preset.shadow,
+            stroke = preset.stroke,
+            background = preset.background,
+            isBold = false,
+            stylePresetId = preset.id,
+            fontSizeSp = if (formattedText.length > 80) 28f else 34f,
+            alignment = CanvasTextAlign.CENTER
+        )
+        _uiState.update {
+            it.copy(
+                baseImageUri = null,
+                baseBitmap = null,
+                backgroundStartColor = verse.bgStartColor,
+                backgroundEndColor = verse.bgEndColor,
                 textLayers = listOf(newLayer),
                 selectedTextLayerId = newLayer.id,
                 ratio = CanvasRatio.RATIO_1_1

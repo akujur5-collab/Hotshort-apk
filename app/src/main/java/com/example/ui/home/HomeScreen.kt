@@ -67,6 +67,7 @@ import com.example.data.db.AppDatabase
 import com.example.data.db.ProjectEntity
 import com.example.data.db.ProjectRepository
 import com.example.data.model.BackgroundTemplate
+import com.example.data.model.BibleVerse
 import com.example.data.model.HindiFont
 import com.example.data.model.HindiQuotesRepository
 import com.example.data.model.TemplateRepository
@@ -92,6 +93,7 @@ fun HomeScreen(
     onPickImage: (Uri) -> Unit,
     onCreateBlank: () -> Unit,
     onSelectTemplate: (BackgroundTemplate) -> Unit,
+    onDesignVerse: (BibleVerse, String) -> Unit,
     onDeleteProject: (Long) -> Unit
 ) {
     val photoPickerLauncher = rememberLauncherForActivityResult(
@@ -115,15 +117,15 @@ fun HomeScreen(
                                     Brush.linearGradient(
                                         listOf(PrimaryPurple, SecondaryCoral)
                                     )
-                                ),
-                            contentAlignment = Alignment.Center
+                                )
                         ) {
                             Text(
                                 text = "अ",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                fontFamily = RozhaOneFamily
+                                fontFamily = RozhaOneFamily,
+                                modifier = Modifier.align(Alignment.Center)
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -161,6 +163,14 @@ fun HomeScreen(
                         )
                     },
                     onCreateBlank = onCreateBlank
+                )
+            }
+
+            // Daily Bible Verse Card (Verse of the Day)
+            item {
+                Spacer(modifier = Modifier.height(18.dp))
+                DailyBibleVerseCard(
+                    onDesignVerse = onDesignVerse
                 )
             }
 

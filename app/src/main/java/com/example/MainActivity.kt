@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.db.AppDatabase
 import com.example.data.db.ProjectRepository
 import com.example.data.model.BackgroundTemplate
+import com.example.data.model.BibleVerse
 import com.example.ui.editor.EditorScreen
 import com.example.ui.editor.EditorViewModel
 import com.example.ui.home.HomeScreen
@@ -71,6 +72,10 @@ fun MainApp(
                         endColor = template.secondaryColor,
                         presetId = template.defaultPresetId
                     )
+                    currentScreen = Screen.EDITOR
+                },
+                onDesignVerse = { verse: BibleVerse, lang: String ->
+                    editorViewModel.applyBibleVerse(verse, lang)
                     currentScreen = Screen.EDITOR
                 },
                 onDeleteProject = { id: Long ->

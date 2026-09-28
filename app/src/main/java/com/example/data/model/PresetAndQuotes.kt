@@ -251,6 +251,21 @@ object HindiQuotesRepository {
                 "आपको और आपके परिवार को पावन पर्व की मंगलमय बधाई।",
                 "नई शुरुआत की ढेरों शुभकामनाएं!"
             )
+        ),
+        HindiQuoteCategory(
+            id = "bible",
+            icon = "✝️",
+            title = "Bible Verses",
+            hindiTitle = "बाइबिल वचन",
+            quotes = listOf(
+                "जो मुझे सामर्थ्य देता है, उसमें मैं सब कुछ कर सकता हूँ।\n- फिलिप्पियों 4:13",
+                "यहोवा मेरा चरवाहा है; मुझे कुछ घटी न होगी।\n- भजन संहिता 23:1",
+                "तेरा वचन मेरे पांव के लिये दीपक, और मेरे मार्ग के लिये उजियाला है।\n- भजन संहिता 119:105",
+                "परमेश्वर हमारा शरणस्थान और बल है, संकट में अति सहज से मिलने वाला सहायक।\n- भजन संहिता 46:1",
+                "हे सब परिश्रम करने वालों और बोझ से दबे हुए लोगो, मेरे पास आओ; मैं तुम्हें विश्राम दूँगा।\n- मत्ती 11:28",
+                "यहोवा तुझे आशीष दे और तेरी रक्षा करे, और तुझे शान्ति दे।\n- गिनती 6:24-26",
+                "विश्वास आशा की हुई वस्तुओं का निश्चय, और अनदेखी वस्तुओं का प्रमाण है।\n- इब्रानियों 11:1"
+            )
         )
     )
 }
@@ -362,6 +377,26 @@ object TemplateRepository {
             sampleText = "सपनों को सच करने का\nसमय अभी है",
             font = HindiFont.POPPINS,
             defaultPresetId = "neon_cyan"
+        ),
+        BackgroundTemplate(
+            id = "bible_divine_peace",
+            title = "Divine Grace",
+            hindiTitle = "ईश्वरीय कृपा",
+            primaryColor = 0xFF14052B,
+            secondaryColor = 0xFF3B1566,
+            sampleText = "यहोवा मेरा चरवाहा है;\nमुझे कुछ घटी न होगी।\n- भजन संहिता 23:1",
+            font = HindiFont.ROZHA_ONE,
+            defaultPresetId = "gold_luxury"
+        ),
+        BackgroundTemplate(
+            id = "bible_strength",
+            title = "Inner Strength",
+            hindiTitle = "आत्मिक शक्ति",
+            primaryColor = 0xFF0A2342,
+            secondaryColor = 0xFF1E5288,
+            sampleText = "जो मुझे सामर्थ्य देता है,\nउसमें मैं सब कुछ कर सकता हूँ।\n- फिलिप्पियों 4:13",
+            font = HindiFont.POPPINS,
+            defaultPresetId = "classic"
         )
     )
 }

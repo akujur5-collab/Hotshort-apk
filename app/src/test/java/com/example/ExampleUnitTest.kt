@@ -77,4 +77,13 @@ class ExampleUnitTest {
         assertEquals(1.0f, CanvasRatio.RATIO_1_1.ratio)
         assertEquals(9f / 16f, CanvasRatio.RATIO_9_16.ratio)
     }
+
+    @Test
+    fun testTextLayerPositionBounds() {
+        val text = "शुभ प्रभात आपका दिन मंगलमय हो"
+        val layer = TextLayer(text = text, x = 0.25f, y = 0.2f)
+        assertTrue(layer.x in 0.05f..0.95f)
+        assertTrue(layer.y in 0.05f..0.95f)
+        assertEquals(text, layer.text)
+    }
 }

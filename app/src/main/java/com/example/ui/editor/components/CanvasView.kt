@@ -41,8 +41,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -210,8 +213,13 @@ private fun TextItemView(
     onDelete: () -> Unit,
     onDuplicate: () -> Unit
 ) {
+    val density = LocalDensity.current
     val posX = (layer.x * canvasWidth).roundToInt()
     val posY = (layer.y * canvasHeight).roundToInt()
+
+    // Consistent scale factor with BitmapExporter (reference width 400f)
+    val baseScale = canvasWidth / 400f
+    val fontSizeSp = with(density) { (layer.fontSizeSp * baseScale).toSp() }
 
     val textAlign = when (layer.alignment) {
         CanvasTextAlign.START -> TextAlign.Start
@@ -222,16 +230,29 @@ private fun TextItemView(
     val shadow = if (layer.shadow != null && layer.shadow.blurRadius > 0f) {
         Shadow(
             color = Color(layer.shadow.color),
-            offset = Offset(layer.shadow.offsetX, layer.shadow.offsetY),
-            blurRadius = layer.shadow.blurRadius
+            offset = Offset(layer.shadow.offsetX * baseScale, layer.shadow.offsetY * baseScale),
+            blurRadius = layer.shadow.blurRadius * baseScale
         )
     } else null
 
     Box(
         modifier = Modifier
-            .offset { IntOffset(posX, posY) }
-            .rotate(layer.rotation)
-            .scale(layer.scale)
+            .layout { measurable, constraints ->
+                val maxTextWidthPx = (canvasWidth * 0.85f).roundToInt()
+                val placeable = measurable.measure(
+                    constraints.copy(minWidth = 0, maxWidth = maxTextWidthPx)
+                )
+                layout(placeable.width, placeable.height) {
+                    val left = (posX - placeable.width / 2f).roundToInt()
+                    val top = (posY - placeable.height / 2f).roundToInt()
+                    placeable.placeRelative(left, top)
+                }
+            }
+            .graphicsLayer {
+                rotationZ = layer.rotation
+                scaleX = layer.scale
+                scaleY = layer.scale
+            }
             .pointerInput(layer.id) {
                 detectTransformGestures { _, pan, zoom, rotation ->
                     onTransform(pan.x, pan.y, zoom, rotation)
@@ -251,16 +272,17 @@ private fun TextItemView(
         // Text Container
         Box(
             modifier = Modifier
-                .offset(x = (-50).dp, y = (-20).dp) // Center roughly
                 .then(
                     if (layer.background != null && layer.background.color != 0L) {
-                        Modifier.background(
-                            Color(layer.background.color),
-                            RoundedCornerShape(layer.background.cornerRadius.dp)
-                        ).padding(
-                            horizontal = layer.background.paddingHorizontal.dp,
-                            vertical = layer.background.paddingVertical.dp
-                        )
+                        Modifier
+                            .background(
+                                Color(layer.background.color),
+                                RoundedCornerShape((layer.background.cornerRadius * baseScale).dp)
+                            )
+                            .padding(
+                                horizontal = (layer.background.paddingHorizontal * baseScale).dp,
+                                vertical = (layer.background.paddingVertical * baseScale).dp
+                            )
                     } else Modifier
                 )
                 .then(
@@ -278,7 +300,7 @@ private fun TextItemView(
             Text(
                 text = layer.text,
                 fontFamily = layer.font.toFontFamily(),
-                fontSize = layer.fontSizeSp.sp,
+                fontSize = fontSizeSp,
                 fontWeight = if (layer.isBold) FontWeight.Bold else FontWeight.Normal,
                 fontStyle = if (layer.isItalic) FontStyle.Italic else FontStyle.Normal,
                 textDecoration = if (layer.isUnderline) TextDecoration.Underline else TextDecoration.None,
@@ -286,7 +308,7 @@ private fun TextItemView(
                 textAlign = textAlign,
                 style = androidx.compose.ui.text.TextStyle(
                     shadow = shadow,
-                    letterSpacing = layer.letterSpacingSp.sp
+                    letterSpacing = with(density) { (layer.letterSpacingSp * baseScale).toSp() }
                 )
             )
 
@@ -316,14 +338,27 @@ private fun StickerItemView(
     onDelete: () -> Unit,
     onDuplicate: () -> Unit
 ) {
+    val density = LocalDensity.current
     val posX = (sticker.x * canvasWidth).roundToInt()
     val posY = (sticker.y * canvasHeight).roundToInt()
+    val baseScale = canvasWidth / 400f
+    val stickerSizeSp = with(density) { (sticker.fontSizeSp * baseScale).toSp() }
 
     Box(
         modifier = Modifier
-            .offset { IntOffset(posX, posY) }
-            .rotate(sticker.rotation)
-            .scale(sticker.scale)
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                layout(placeable.width, placeable.height) {
+                    val left = (posX - placeable.width / 2f).roundToInt()
+                    val top = (posY - placeable.height / 2f).roundToInt()
+                    placeable.placeRelative(left, top)
+                }
+            }
+            .graphicsLayer {
+                rotationZ = sticker.rotation
+                scaleX = sticker.scale
+                scaleY = sticker.scale
+            }
             .pointerInput(sticker.id) {
                 detectTransformGestures { _, pan, zoom, rotation ->
                     onTransform(pan.x, pan.y, zoom, rotation)
@@ -336,7 +371,6 @@ private fun StickerItemView(
     ) {
         Box(
             modifier = Modifier
-                .offset(x = (-20).dp, y = (-20).dp)
                 .then(
                     if (isSelected) {
                         Modifier
@@ -347,7 +381,7 @@ private fun StickerItemView(
         ) {
             Text(
                 text = sticker.text,
-                fontSize = sticker.fontSizeSp.sp,
+                fontSize = stickerSizeSp,
                 color = Color.White
             )
 

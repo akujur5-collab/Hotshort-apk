@@ -236,9 +236,9 @@ object BitmapExporter {
         }
         val styledTypeface = Typeface.create(typeface, style)
 
-        // Scale factor relative to reference 1080p width
+        // Scale factor relative to reference 400 width (consistent with CanvasView preview)
         val baseScale = canvasWidth / 400f
-        val textSizePx = layer.fontSizeSp * baseScale * layer.scale
+        val textSizePx = layer.fontSizeSp * baseScale
 
         val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
             this.typeface = styledTypeface
@@ -255,21 +255,32 @@ object BitmapExporter {
         }
 
         val maxTextWidth = (canvasWidth * 0.85f).toInt()
+
+        // Measure natural line width so the text layout fits the actual content
+        // rather than blindly allocating full maxTextWidth which shifts text off-canvas.
+        val lines = layer.text.split("\n")
+        val maxLineWidth = lines.maxOfOrNull { line ->
+            textPaint.measureText(line)
+        } ?: 0f
+
+        val layoutWidth = maxLineWidth.coerceIn(10f, maxTextWidth.toFloat()).toInt() + 4
+
         val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(layer.text, 0, layer.text.length, textPaint, maxTextWidth)
+            StaticLayout.Builder.obtain(layer.text, 0, layer.text.length, textPaint, layoutWidth)
                 .setAlignment(alignment)
                 .setIncludePad(true)
                 .build()
         } else {
             @Suppress("DEPRECATION")
             StaticLayout(
-                layer.text, textPaint, maxTextWidth,
+                layer.text, textPaint, layoutWidth,
                 alignment, 1.0f, 0.0f, true
             )
         }
 
-        val textWidth = staticLayout.width.toFloat()
-        val textHeight = staticLayout.height.toFloat()
+        val layoutW = staticLayout.width.toFloat()
+        val layoutH = staticLayout.height.toFloat()
+        val actualContentWidth = (0 until staticLayout.lineCount).maxOfOrNull { staticLayout.getLineWidth(it) } ?: layoutW
 
         val posX = layer.x * canvasWidth
         val posY = layer.y * canvasHeight
@@ -277,6 +288,7 @@ object BitmapExporter {
         canvas.save()
         canvas.translate(posX, posY)
         canvas.rotate(layer.rotation)
+        canvas.scale(layer.scale, layer.scale)
 
         // Draw Background chip if configured
         val bgConfig = layer.background
@@ -287,11 +299,12 @@ object BitmapExporter {
             }
             val padX = bgConfig.paddingHorizontal * baseScale
             val padY = bgConfig.paddingVertical * baseScale
+            val chipW = maxOf(actualContentWidth, 30f)
             val rect = RectF(
-                -textWidth / 2f - padX,
-                -textHeight / 2f - padY,
-                textWidth / 2f + padX,
-                textHeight / 2f + padY
+                -chipW / 2f - padX,
+                -layoutH / 2f - padY,
+                chipW / 2f + padX,
+                layoutH / 2f + padY
             )
             canvas.drawRoundRect(rect, bgConfig.cornerRadius * baseScale, bgConfig.cornerRadius * baseScale, bgPaint)
         }
@@ -306,16 +319,16 @@ object BitmapExporter {
                 clearShadowLayer()
             }
             val strokeLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                StaticLayout.Builder.obtain(layer.text, 0, layer.text.length, strokePaint, maxTextWidth)
+                StaticLayout.Builder.obtain(layer.text, 0, layer.text.length, strokePaint, layoutWidth)
                     .setAlignment(alignment)
                     .setIncludePad(true)
                     .build()
             } else {
                 @Suppress("DEPRECATION")
-                StaticLayout(layer.text, strokePaint, maxTextWidth, alignment, 1.0f, 0.0f, true)
+                StaticLayout(layer.text, strokePaint, layoutWidth, alignment, 1.0f, 0.0f, true)
             }
             canvas.save()
-            canvas.translate(-textWidth / 2f, -textHeight / 2f)
+            canvas.translate(-layoutW / 2f, -layoutH / 2f)
             strokeLayout.draw(canvas)
             canvas.restore()
         }
@@ -333,7 +346,7 @@ object BitmapExporter {
 
         // Draw Main Text
         canvas.save()
-        canvas.translate(-textWidth / 2f, -textHeight / 2f)
+        canvas.translate(-layoutW / 2f, -layoutH / 2f)
         staticLayout.draw(canvas)
         canvas.restore()
 
@@ -348,7 +361,7 @@ object BitmapExporter {
     ) {
         val baseScale = canvasWidth / 400f
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = sticker.fontSizeSp * baseScale * sticker.scale
+            textSize = sticker.fontSizeSp * baseScale
             textAlign = Paint.Align.CENTER
             color = android.graphics.Color.WHITE
         }
@@ -359,7 +372,11 @@ object BitmapExporter {
         canvas.save()
         canvas.translate(posX, posY)
         canvas.rotate(sticker.rotation)
-        canvas.drawText(sticker.text, 0f, paint.textSize / 3f, paint)
+        canvas.scale(sticker.scale, sticker.scale)
+
+        val fontMetrics = paint.fontMetrics
+        val yOffset = -(fontMetrics.ascent + fontMetrics.descent) / 2f
+        canvas.drawText(sticker.text, 0f, yOffset, paint)
         canvas.restore()
     }
 

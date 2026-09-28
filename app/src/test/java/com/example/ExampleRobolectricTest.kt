@@ -16,6 +16,15 @@ class ExampleRobolectricTest {
   fun `read string from context`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val appName = context.getString(R.string.app_name)
-    assertEquals("My Application", appName)
+    assertEquals("ChitraLekh", appName)
+  }
+
+  @Test
+  fun `test daily bible verse repository returns valid verse`() {
+    val verse = com.example.data.model.BibleVerseRepository.getVerseOfTheDay()
+    org.junit.Assert.assertNotNull(verse)
+    org.junit.Assert.assertTrue(verse.verseHindi.isNotEmpty())
+    org.junit.Assert.assertTrue(verse.verseEnglish.isNotEmpty())
+    org.junit.Assert.assertTrue(verse.referenceHindi.isNotEmpty())
   }
 }

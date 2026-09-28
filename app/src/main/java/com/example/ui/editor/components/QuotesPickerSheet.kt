@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data.model.BibleVerseRepository
 import com.example.data.model.HindiQuotesRepository
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.DarkBorder
@@ -142,11 +143,21 @@ fun QuotesPickerSheet(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(currentCategory.quotes) { quote ->
-                    QuoteCard(
-                        quote = quote,
-                        onClick = { onQuoteSelected(quote) }
-                    )
+                if (selectedCategoryId == "bible") {
+                    items(BibleVerseRepository.VERSES) { verse ->
+                        val formatted = "${verse.verseHindi}\n— ${verse.referenceHindi}"
+                        QuoteCard(
+                            quote = formatted,
+                            onClick = { onQuoteSelected(formatted) }
+                        )
+                    }
+                } else {
+                    items(currentCategory.quotes) { quote ->
+                        QuoteCard(
+                            quote = quote,
+                            onClick = { onQuoteSelected(quote) }
+                        )
+                    }
                 }
                 item {
                     Spacer(modifier = Modifier.height(30.dp))
