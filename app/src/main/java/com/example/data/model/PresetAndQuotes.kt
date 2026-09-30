@@ -1,5 +1,11 @@
 package com.example.data.model
 
+data class PresetCategory(
+    val id: String,
+    val title: String,
+    val icon: String
+)
+
 data class TextStylePreset(
     val id: String,
     val name: String,
@@ -9,11 +15,26 @@ data class TextStylePreset(
     val shadow: TextShadowConfig?,
     val stroke: TextStrokeConfig?,
     val background: TextBackgroundConfig?,
-    val isBold: Boolean = true
+    val isBold: Boolean = true,
+    val category: String = "royal",
+    val badgeIcon: String = "✨",
+    val letterSpacingSp: Float = 0f,
+    val description: String = ""
 )
 
 object PresetRepository {
+    val CATEGORIES = listOf(
+        PresetCategory("all", "सभी 24 स्टाइल्स", "✨"),
+        PresetCategory("royal", "शाही व क्लासिक", "👑"),
+        PresetCategory("neon", "नियॉन व ऊर्जा", "🔥"),
+        PresetCategory("devotional", "धार्मिक व भक्ति", "🛕"),
+        PresetCategory("poetry", "शायरी व सुलेख", "✒️"),
+        PresetCategory("festive", "उत्सव व 3D", "🎉"),
+        PresetCategory("modern", "मॉडर्न व मिनिमल", "💎")
+    )
+
     val PRESETS = listOf(
+        // === 1. शाही व क्लासिक (ROYAL & LUXURY) ===
         TextStylePreset(
             id = "classic",
             name = "Classic Bold",
@@ -23,18 +44,11 @@ object PresetRepository {
             shadow = TextShadowConfig(color = 0xDD000000, offsetX = 3f, offsetY = 3f, blurRadius = 6f),
             stroke = null,
             background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "neon_cyan",
-            name = "Neon Cyan",
-            hindiName = "नियॉन ग्लो",
-            font = HindiFont.POPPINS,
-            textColor = 0xFF00FFFF,
-            shadow = TextShadowConfig(color = 0xFF00E5FF, offsetX = 0f, offsetY = 0f, blurRadius = 24f),
-            stroke = null,
-            background = null,
-            isBold = true
+            isBold = true,
+            category = "royal",
+            badgeIcon = "⚪",
+            letterSpacingSp = 0.2f,
+            description = "सादा सफेद व गहरा ड्रॉप शैडो"
         ),
         TextStylePreset(
             id = "gold_luxury",
@@ -45,29 +59,11 @@ object PresetRepository {
             shadow = TextShadowConfig(color = 0xEE8B6508, offsetX = 2f, offsetY = 4f, blurRadius = 8f),
             stroke = TextStrokeConfig(color = 0xAA5B3A00, strokeWidth = 1.5f),
             background = null,
-            isBold = false
-        ),
-        TextStylePreset(
-            id = "fire_effect",
-            name = "Fire Effect",
-            hindiName = "अग्नि ज्वाला",
-            font = HindiFont.YATRA_ONE,
-            textColor = 0xFFFF4500,
-            shadow = TextShadowConfig(color = 0xFFFF9800, offsetX = 0f, offsetY = 0f, blurRadius = 18f),
-            stroke = TextStrokeConfig(color = 0xFFFFEB3B, strokeWidth = 1.5f),
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "water_style",
-            name = "Ocean Wave",
-            hindiName = "सागर तरंग",
-            font = HindiFont.POPPINS,
-            textColor = 0xFFE0F7FA,
-            shadow = TextShadowConfig(color = 0xFF0288D1, offsetX = 0f, offsetY = 2f, blurRadius = 14f),
-            stroke = TextStrokeConfig(color = 0xFF0097A7, strokeWidth = 1.2f),
-            background = null,
-            isBold = true
+            isBold = false,
+            category = "royal",
+            badgeIcon = "👑",
+            letterSpacingSp = 0.5f,
+            description = "राजसी स्वर्णिम आभा व गहरा शैडो"
         ),
         TextStylePreset(
             id = "royal_devanagari",
@@ -78,95 +74,11 @@ object PresetRepository {
             shadow = TextShadowConfig(color = 0xFF4A148C, offsetX = 3f, offsetY = 5f, blurRadius = 10f),
             stroke = null,
             background = null,
-            isBold = false
-        ),
-        TextStylePreset(
-            id = "kalam_handwritten",
-            name = "Kalam Ink",
-            hindiName = "सुलेख कलम",
-            font = HindiFont.KALAM,
-            textColor = 0xFFFFF8E1,
-            shadow = TextShadowConfig(color = 0xCC1A237E, offsetX = 2f, offsetY = 2f, blurRadius = 5f),
-            stroke = null,
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "outline_pop",
-            name = "Outline Pop",
-            hindiName = "आउटलाइन स्टाइल",
-            font = HindiFont.POPPINS,
-            textColor = 0xFFFFFFFF,
-            shadow = TextShadowConfig(color = 0x88000000, offsetX = 4f, offsetY = 4f, blurRadius = 6f),
-            stroke = TextStrokeConfig(color = 0xFF1A1A2E, strokeWidth = 3f),
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "deep_shadow",
-            name = "Deep 3D Shadow",
-            hindiName = "गहरा छाया प्रभाव",
-            font = HindiFont.YATRA_ONE,
-            textColor = 0xFFFFC107,
-            shadow = TextShadowConfig(color = 0xFF212121, offsetX = 6f, offsetY = 8f, blurRadius = 2f),
-            stroke = null,
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "tag_chip",
-            name = "Minimal Chip",
-            hindiName = "हाइलाइट पट्टी",
-            font = HindiFont.MUKTA,
-            textColor = 0xFFFFFFFF,
-            shadow = null,
-            stroke = null,
-            background = TextBackgroundConfig(color = 0xDD6C63FF, cornerRadius = 8f, paddingHorizontal = 16f, paddingVertical = 6f),
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "retro_sunset",
-            name = "Sunset Retro",
-            hindiName = "संध्या लालिमा",
-            font = HindiFont.POPPINS,
-            textColor = 0xFFFF6E40,
-            shadow = TextShadowConfig(color = 0xFFFFD740, offsetX = -2f, offsetY = 2f, blurRadius = 10f),
-            stroke = TextStrokeConfig(color = 0xFFD50000, strokeWidth = 1.5f),
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "cyber_magenta",
-            name = "Cyber Magenta",
-            hindiName = "साइबर पिंक",
-            font = HindiFont.POPPINS,
-            textColor = 0xFFFF1744,
-            shadow = TextShadowConfig(color = 0xFFFF4081, offsetX = 0f, offsetY = 0f, blurRadius = 20f),
-            stroke = TextStrokeConfig(color = 0xFFFFFFFF, strokeWidth = 1f),
-            background = null,
-            isBold = true
-        ),
-        TextStylePreset(
-            id = "modak_festive",
-            name = "Modak Festive",
-            hindiName = "मोदक उत्सव",
-            font = HindiFont.MODAK,
-            textColor = 0xFFFFD700,
-            shadow = TextShadowConfig(color = 0xFFD84315, offsetX = 3f, offsetY = 4f, blurRadius = 10f),
-            stroke = TextStrokeConfig(color = 0xFFBF360C, strokeWidth = 2f),
-            background = null,
-            isBold = false
-        ),
-        TextStylePreset(
-            id = "khand_impact",
-            name = "Khand Impact",
-            hindiName = "खांड इम्पैक्ट",
-            font = HindiFont.KHAND,
-            textColor = 0xFFFFFFFF,
-            shadow = TextShadowConfig(color = 0xFF000000, offsetX = 4f, offsetY = 4f, blurRadius = 6f),
-            stroke = TextStrokeConfig(color = 0xFFD32F2F, strokeWidth = 2f),
-            background = null,
-            isBold = true
+            isBold = false,
+            category = "royal",
+            badgeIcon = "🛕",
+            letterSpacingSp = 0.8f,
+            description = "शाही बैंगनी शैडो व कोमल स्वर्ण"
         ),
         TextStylePreset(
             id = "adishila_heritage",
@@ -177,29 +89,11 @@ object PresetRepository {
             shadow = TextShadowConfig(color = 0xAA3E2723, offsetX = 2f, offsetY = 3f, blurRadius = 6f),
             stroke = null,
             background = null,
-            isBold = false
-        ),
-        TextStylePreset(
-            id = "tiro_classic",
-            name = "Tiro Classic",
-            hindiName = "तीरो पारंपरिक",
-            font = HindiFont.TIRO_DEVANAGARI_HINDI,
-            textColor = 0xFFFFF9C4,
-            shadow = TextShadowConfig(color = 0xCC1B5E20, offsetX = 2f, offsetY = 3f, blurRadius = 6f),
-            stroke = null,
-            background = null,
-            isBold = false
-        ),
-        TextStylePreset(
-            id = "kohinoor_clean",
-            name = "Kohinoor Modern",
-            hindiName = "कोहिनूर मॉडर्न",
-            font = HindiFont.KOHINOOR_DEVANAGARI,
-            textColor = 0xFFFFFFFF,
-            shadow = TextShadowConfig(color = 0x99000000, offsetX = 2f, offsetY = 2f, blurRadius = 6f),
-            stroke = null,
-            background = null,
-            isBold = false
+            isBold = false,
+            category = "royal",
+            badgeIcon = "📜",
+            letterSpacingSp = 1.0f,
+            description = "प्राचीन चंदन व टेराकोटा क्लासिकल"
         ),
         TextStylePreset(
             id = "noto_serif_gold",
@@ -210,7 +104,321 @@ object PresetRepository {
             shadow = TextShadowConfig(color = 0xDD311B92, offsetX = 2f, offsetY = 3f, blurRadius = 8f),
             stroke = null,
             background = null,
-            isBold = false
+            isBold = false,
+            category = "royal",
+            badgeIcon = "✨",
+            letterSpacingSp = 0.6f,
+            description = "साहित्यिक शैम्पेन गोल्ड व रॉयल पर्पल"
+        ),
+
+        // === 2. नियॉन, अग्नि व ऊर्जा (NEON & ENERGY) ===
+        TextStylePreset(
+            id = "fire_effect",
+            name = "Fire Flame",
+            hindiName = "अग्नि ज्वाला",
+            font = HindiFont.YATRA_ONE,
+            textColor = 0xFFFF4500,
+            shadow = TextShadowConfig(color = 0xFFFF9800, offsetX = 0f, offsetY = 0f, blurRadius = 18f),
+            stroke = TextStrokeConfig(color = 0xFFFFEB3B, strokeWidth = 1.5f),
+            background = null,
+            isBold = true,
+            category = "neon",
+            badgeIcon = "🔥",
+            letterSpacingSp = 0f,
+            description = "दहकती ज्वाला व पीला नियॉन स्ट्रोक"
+        ),
+        TextStylePreset(
+            id = "neon_cyan",
+            name = "Neon Cyan",
+            hindiName = "नियॉन स्यान",
+            font = HindiFont.POPPINS,
+            textColor = 0xFF00FFFF,
+            shadow = TextShadowConfig(color = 0xFF00E5FF, offsetX = 0f, offsetY = 0f, blurRadius = 24f),
+            stroke = null,
+            background = null,
+            isBold = true,
+            category = "neon",
+            badgeIcon = "💎",
+            letterSpacingSp = 0.5f,
+            description = "इलेक्ट्रिक स्यान ग्लो व गहरा आभास"
+        ),
+        TextStylePreset(
+            id = "cyber_magenta",
+            name = "Cyber Magenta",
+            hindiName = "साइबर पिंक",
+            font = HindiFont.POPPINS,
+            textColor = 0xFFFF1744,
+            shadow = TextShadowConfig(color = 0xFFFF4081, offsetX = 0f, offsetY = 0f, blurRadius = 20f),
+            stroke = TextStrokeConfig(color = 0xFFFFFFFF, strokeWidth = 1f),
+            background = null,
+            isBold = true,
+            category = "neon",
+            badgeIcon = "⚡",
+            letterSpacingSp = 0.4f,
+            description = "फ्यूचरिस्टिक साइबरपंक पिंक व वाइट स्ट्रोक"
+        ),
+        TextStylePreset(
+            id = "electric_purple",
+            name = "Electric Ultraviolet",
+            hindiName = "इलेक्ट्रिक पर्पल",
+            font = HindiFont.POPPINS,
+            textColor = 0xFFE040FB,
+            shadow = TextShadowConfig(color = 0xFF7C4DFF, offsetX = 0f, offsetY = 0f, blurRadius = 22f),
+            stroke = TextStrokeConfig(color = 0xFFEDE7F6, strokeWidth = 0.8f),
+            background = null,
+            isBold = true,
+            category = "neon",
+            badgeIcon = "🔮",
+            letterSpacingSp = 0.6f,
+            description = "अल्ट्रावायलेट नियॉन प्रभा व बैंगनी ऑरा"
+        ),
+
+        // === 3. धार्मिक, पावन व भक्ति (SACRED & DEVOTIONAL) ===
+        TextStylePreset(
+            id = "bhagwa_divine",
+            name = "Saffron Divine",
+            hindiName = "भगवा तेज",
+            font = HindiFont.TIRO_DEVANAGARI_HINDI,
+            textColor = 0xFFFF6F00,
+            shadow = TextShadowConfig(color = 0xFFFFD54F, offsetX = 0f, offsetY = 2f, blurRadius = 14f),
+            stroke = TextStrokeConfig(color = 0xFFFFE082, strokeWidth = 1.2f),
+            background = null,
+            isBold = true,
+            category = "devotional",
+            badgeIcon = "🚩",
+            letterSpacingSp = 0.6f,
+            description = "दिव्य केसरी आभा व स्वर्णिम तेज"
+        ),
+        TextStylePreset(
+            id = "mahakal_aura",
+            name = "Mahakal Ash",
+            hindiName = "महाकाल भस्म",
+            font = HindiFont.KHAND,
+            textColor = 0xFFECEFF1,
+            shadow = TextShadowConfig(color = 0xFF263238, offsetX = 3f, offsetY = 4f, blurRadius = 14f),
+            stroke = TextStrokeConfig(color = 0xFF37474F, strokeWidth = 1.5f),
+            background = null,
+            isBold = true,
+            category = "devotional",
+            badgeIcon = "🔱",
+            letterSpacingSp = 0.5f,
+            description = "पवित्र भस्म रजत व रहस्यमयी काला धुआं"
+        ),
+        TextStylePreset(
+            id = "tiro_classic",
+            name = "Tiro Classic",
+            hindiName = "तीरो पारंपरिक",
+            font = HindiFont.TIRO_DEVANAGARI_HINDI,
+            textColor = 0xFFFFF9C4,
+            shadow = TextShadowConfig(color = 0xCC1B5E20, offsetX = 2f, offsetY = 3f, blurRadius = 6f),
+            stroke = null,
+            background = null,
+            isBold = false,
+            category = "devotional",
+            badgeIcon = "🪔",
+            letterSpacingSp = 0.5f,
+            description = "मंदिर शिलालेख रेशमी क्रीम व हरित छाया"
+        ),
+        TextStylePreset(
+            id = "radhe_peacock",
+            name = "Vrindavan Peacock",
+            hindiName = "राधे वृंदावन",
+            font = HindiFont.KALAM,
+            textColor = 0xFF80DEEA,
+            shadow = TextShadowConfig(color = 0xFFAD1457, offsetX = 2f, offsetY = 2f, blurRadius = 10f),
+            stroke = TextStrokeConfig(color = 0xFFE91E63, strokeWidth = 0.8f),
+            background = null,
+            isBold = true,
+            category = "devotional",
+            badgeIcon = "🦚",
+            letterSpacingSp = 0.6f,
+            description = "मोरपंखी मोरपंख नीला व कमल गुलाबी"
+        ),
+
+        // === 4. शायरी, सुलेख व साहित्य (POETRY & CALLIGRAPHY) ===
+        TextStylePreset(
+            id = "kalam_handwritten",
+            name = "Kalam Ink",
+            hindiName = "सुलेख कलम",
+            font = HindiFont.KALAM,
+            textColor = 0xFFFFF8E1,
+            shadow = TextShadowConfig(color = 0xCC1A237E, offsetX = 2f, offsetY = 2f, blurRadius = 5f),
+            stroke = null,
+            background = null,
+            isBold = true,
+            category = "poetry",
+            badgeIcon = "✒️",
+            letterSpacingSp = 0.4f,
+            description = "हस्तलिखित सुंदर स्याही व गहरा इंडिगो"
+        ),
+        TextStylePreset(
+            id = "ancient_parchment",
+            name = "Ancient Manuscript",
+            hindiName = "प्राचीन पांडुलिपि",
+            font = HindiFont.ADISHILA,
+            textColor = 0xFFFFCC80,
+            shadow = TextShadowConfig(color = 0xFF4E342E, offsetX = 2f, offsetY = 3f, blurRadius = 7f),
+            stroke = null,
+            background = null,
+            isBold = false,
+            category = "poetry",
+            badgeIcon = "📜",
+            letterSpacingSp = 1.2f,
+            description = "ऐतिहासिक भोजपत्र व विंटेज वॉलनट"
+        ),
+        TextStylePreset(
+            id = "shayari_mood",
+            name = "Poetic Moonlight",
+            hindiName = "शायरी खामोशी",
+            font = HindiFont.NOTO_SERIF_DEVANAGARI,
+            textColor = 0xFFEDE7F6,
+            shadow = TextShadowConfig(color = 0xDD311B92, offsetX = 2f, offsetY = 3f, blurRadius = 12f),
+            stroke = null,
+            background = null,
+            isBold = false,
+            category = "poetry",
+            badgeIcon = "🌙",
+            letterSpacingSp = 0.8f,
+            description = "चांदनी लैवेंडर व भावुक गहरा बैंगनी"
+        ),
+        TextStylePreset(
+            id = "yatra_vintage",
+            name = "Yatra Signage",
+            hindiName = "यात्रा विंटेज",
+            font = HindiFont.YATRA_ONE,
+            textColor = 0xFFFFD54F,
+            shadow = TextShadowConfig(color = 0xFFBF360C, offsetX = 3f, offsetY = 4f, blurRadius = 4f),
+            stroke = TextStrokeConfig(color = 0xFFE65100, strokeWidth = 1.2f),
+            background = null,
+            isBold = true,
+            category = "poetry",
+            badgeIcon = "🚌",
+            letterSpacingSp = 0.5f,
+            description = "क्लासिक भारतीय हाइवे व साइनेज लुक"
+        ),
+
+        // === 5. उत्सव, पॉप व 3D (FESTIVE, DISPLAY & 3D) ===
+        TextStylePreset(
+            id = "modak_festive",
+            name = "Modak Festive",
+            hindiName = "मोदक उत्सव",
+            font = HindiFont.MODAK,
+            textColor = 0xFFFFD700,
+            shadow = TextShadowConfig(color = 0xFFD84315, offsetX = 3f, offsetY = 4f, blurRadius = 10f),
+            stroke = TextStrokeConfig(color = 0xFFBF360C, strokeWidth = 2f),
+            background = null,
+            isBold = false,
+            category = "festive",
+            badgeIcon = "🎨",
+            letterSpacingSp = 0f,
+            description = "चबी चॉकलेटी गोल्ड व उत्सव लाल शैडो"
+        ),
+        TextStylePreset(
+            id = "khand_impact",
+            name = "Khand Impact",
+            hindiName = "खांड इम्पैक्ट",
+            font = HindiFont.KHAND,
+            textColor = 0xFFFFFFFF,
+            shadow = TextShadowConfig(color = 0xFF000000, offsetX = 4f, offsetY = 4f, blurRadius = 6f),
+            stroke = TextStrokeConfig(color = 0xFFD32F2F, strokeWidth = 2f),
+            background = null,
+            isBold = true,
+            category = "festive",
+            badgeIcon = "📰",
+            letterSpacingSp = 0.2f,
+            description = "बोल्ड न्यूज़ हेडलाइन व गहरा रेड स्ट्रोक"
+        ),
+        TextStylePreset(
+            id = "deep_shadow",
+            name = "Deep 3D Shadow",
+            hindiName = "गहरा 3D छाया",
+            font = HindiFont.YATRA_ONE,
+            textColor = 0xFFFFC107,
+            shadow = TextShadowConfig(color = 0xFF212121, offsetX = 6f, offsetY = 8f, blurRadius = 2f),
+            stroke = null,
+            background = null,
+            isBold = true,
+            category = "festive",
+            badgeIcon = "🧱",
+            letterSpacingSp = 0.4f,
+            description = "3D गहरा उभार व कड़ा सॉलिड शैडो"
+        ),
+        TextStylePreset(
+            id = "outline_pop",
+            name = "Outline Pop",
+            hindiName = "आउटलाइन पॉप",
+            font = HindiFont.POPPINS,
+            textColor = 0xFFFFFFFF,
+            shadow = TextShadowConfig(color = 0x88000000, offsetX = 4f, offsetY = 4f, blurRadius = 6f),
+            stroke = TextStrokeConfig(color = 0xFF1A1A2E, strokeWidth = 3f),
+            background = null,
+            isBold = true,
+            category = "festive",
+            badgeIcon = "🔘",
+            letterSpacingSp = 0.2f,
+            description = "पॉप आर्ट डबल थिक स्ट्रोक"
+        ),
+        TextStylePreset(
+            id = "holi_gulal",
+            name = "Holi Splash",
+            hindiName = "होली गुलाल",
+            font = HindiFont.MODAK,
+            textColor = 0xFFFF4081,
+            shadow = TextShadowConfig(color = 0xFFFFEA00, offsetX = 0f, offsetY = 0f, blurRadius = 16f),
+            stroke = TextStrokeConfig(color = 0xFFFF6D00, strokeWidth = 1.8f),
+            background = null,
+            isBold = false,
+            category = "festive",
+            badgeIcon = "🎉",
+            letterSpacingSp = 0f,
+            description = "गुलाबी गुलाल, पीला ग्लो व संतरी स्ट्रोक"
+        ),
+        TextStylePreset(
+            id = "water_style",
+            name = "Ocean Wave",
+            hindiName = "सागर तरंग",
+            font = HindiFont.POPPINS,
+            textColor = 0xFFE0F7FA,
+            shadow = TextShadowConfig(color = 0xFF0288D1, offsetX = 0f, offsetY = 2f, blurRadius = 14f),
+            stroke = TextStrokeConfig(color = 0xFF0097A7, strokeWidth = 1.2f),
+            background = null,
+            isBold = true,
+            category = "festive",
+            badgeIcon = "🌊",
+            letterSpacingSp = 0.4f,
+            description = "ताज़ा समुद्री लहर व टील आउटलाइन"
+        ),
+
+        // === 6. मॉडर्न, मिनिमल व हाइलाइट (MODERN & MINIMAL) ===
+        TextStylePreset(
+            id = "tag_chip",
+            name = "Minimal Chip",
+            hindiName = "हाइलाइट पट्टी",
+            font = HindiFont.MUKTA,
+            textColor = 0xFFFFFFFF,
+            shadow = null,
+            stroke = null,
+            background = TextBackgroundConfig(color = 0xDD6C63FF, cornerRadius = 8f, paddingHorizontal = 16f, paddingVertical = 6f),
+            isBold = true,
+            category = "modern",
+            badgeIcon = "🏷️",
+            letterSpacingSp = 0.5f,
+            description = "आधुनिक पर्पल हाइलाइटर कैप्सूल"
+        ),
+        TextStylePreset(
+            id = "kohinoor_clean",
+            name = "Kohinoor Modern",
+            hindiName = "कोहिनूर मॉडर्न",
+            font = HindiFont.KOHINOOR_DEVANAGARI,
+            textColor = 0xFFFFFFFF,
+            shadow = TextShadowConfig(color = 0x99000000, offsetX = 2f, offsetY = 2f, blurRadius = 6f),
+            stroke = null,
+            background = null,
+            isBold = false,
+            category = "modern",
+            badgeIcon = "💎",
+            letterSpacingSp = 0.5f,
+            description = "अल्ट्रा-क्लीन मिनिमल देवनागरी"
         )
     )
 

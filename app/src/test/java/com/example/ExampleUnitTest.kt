@@ -18,7 +18,7 @@ class ExampleUnitTest {
     fun testTextPresetsLoaded() {
         val presets = PresetRepository.PRESETS
         assertTrue(presets.isNotEmpty())
-        assertTrue(presets.size >= 10)
+        assertTrue("Expected 24+ presets, found ${presets.size}", presets.size >= 24)
 
         val classic = presets.find { it.id == "classic" }
         assertNotNull(classic)
@@ -29,6 +29,18 @@ class ExampleUnitTest {
 
         val gold = presets.find { it.id == "gold_luxury" }
         assertNotNull(gold)
+
+        val bhagwa = presets.find { it.id == "bhagwa_divine" }
+        assertNotNull(bhagwa)
+
+        val mahakal = presets.find { it.id == "mahakal_aura" }
+        assertNotNull(mahakal)
+
+        val categories = PresetRepository.CATEGORIES
+        assertTrue(categories.size >= 6)
+        assertTrue(categories.any { it.id == "royal" })
+        assertTrue(categories.any { it.id == "devotional" })
+        assertTrue(categories.any { it.id == "neon" })
     }
 
     @Test

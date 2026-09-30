@@ -365,9 +365,21 @@ fun EditorScreen(
     }
 
     if (uiState.showFontsSheet) {
+        val currentTextLayer = selectedTextLayer
         FontPickerSheet(
-            activeFont = selectedTextLayer?.font ?: com.example.data.model.HindiFont.POPPINS,
-            onFontSelected = { viewModel.setFont(it) },
+            currentText = currentTextLayer?.text ?: "शुभ प्रभात आपका दिन मंगलमय हो",
+            activeFont = currentTextLayer?.font ?: com.example.data.model.HindiFont.POPPINS,
+            activeBold = currentTextLayer?.isBold ?: false,
+            activeItalic = currentTextLayer?.isItalic ?: false,
+            onApply = { chosenFont, chosenPreset, isBold, isItalic, customSizeSp ->
+                viewModel.applyTypography(
+                    font = chosenFont,
+                    preset = chosenPreset,
+                    isBold = isBold,
+                    isItalic = isItalic,
+                    sizeSp = customSizeSp
+                )
+            },
             onDismiss = { viewModel.setShowFonts(false) }
         )
     }

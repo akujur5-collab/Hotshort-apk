@@ -340,6 +340,40 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun applyTypography(
+        font: HindiFont,
+        preset: TextStylePreset? = null,
+        isBold: Boolean? = null,
+        isItalic: Boolean? = null,
+        sizeSp: Float? = null
+    ) {
+        pushUndo()
+        updateSelectedTextLayer { current ->
+            var updated = current.copy(font = font)
+            if (preset != null) {
+                updated = updated.copy(
+                    textColor = preset.textColor,
+                    shadow = preset.shadow,
+                    stroke = preset.stroke,
+                    background = preset.background,
+                    isBold = preset.isBold,
+                    stylePresetId = preset.id
+                )
+            }
+            if (isBold != null && preset == null) {
+                updated = updated.copy(isBold = isBold)
+            }
+            if (isItalic != null) {
+                updated = updated.copy(isItalic = isItalic)
+            }
+            if (sizeSp != null) {
+                updated = updated.copy(fontSizeSp = sizeSp)
+            }
+            updated
+        }
+        _uiState.update { it.copy(showFontsSheet = false) }
+    }
+
     fun setFont(font: HindiFont) {
         pushUndo()
         updateSelectedTextLayer { it.copy(font = font) }

@@ -20,6 +20,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +49,16 @@ fun StylePresetsRow(
     onSelectPreset: (TextStylePreset) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedCategory by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("all") }
+
+    val filteredPresets = androidx.compose.runtime.remember(selectedCategory) {
+        if (selectedCategory == "all") {
+            PresetRepository.PRESETS
+        } else {
+            PresetRepository.PRESETS.filter { it.category == selectedCategory }
+        }
+    }
+
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -53,25 +67,72 @@ fun StylePresetsRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "कलात्मक टेक्स्ट स्टाइल्स (Presets)",
+                    color = TextSecondary,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(PrimaryPurple.copy(alpha = 0.2f))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "24 स्टाइल्स",
+                        color = PrimaryPurple,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
             Text(
-                text = "टेक्स्ट स्टाइल प्रीसेट (Text Styles)",
+                text = "${filteredPresets.size} उपलब्ध",
                 color = TextSecondary,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(
-                text = "12 स्टाइल्स",
-                color = PrimaryPurple,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 11.sp
             )
         }
 
+        // Category Filter Chips
         LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            items(PresetRepository.CATEGORIES) { category ->
+                val isSelected = category.id == selectedCategory
+                androidx.compose.material3.FilterChip(
+                    selected = isSelected,
+                    onClick = { selectedCategory = category.id },
+                    label = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(category.icon, fontSize = 11.sp)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(category.title, fontSize = 11.sp)
+                        }
+                    },
+                    colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+                        containerColor = DarkSurfaceVariant,
+                        selectedContainerColor = PrimaryPurple,
+                        labelColor = TextSecondary,
+                        selectedLabelColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        // 24 Presets Horizontal List
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(PresetRepository.PRESETS) { preset ->
+            items(filteredPresets) { preset ->
                 val isSelected = preset.id == activePresetId
                 PresetCard(
                     preset = preset,
@@ -99,32 +160,78 @@ fun PresetCard(
 
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
+            .width(108.dp)
+            .height(96.dp)
+            .clip(RoundedCornerShape(14.dp))
             .background(DarkSurfaceVariant)
             .border(
                 width = if (isSelected) 2.dp else 1.dp,
                 color = if (isSelected) PrimaryPurple else DarkBorder,
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(14.dp)
             )
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = "नमस्ते",
-                fontFamily = preset.font.toFontFamily(),
-                fontSize = 20.sp,
-                color = Color(preset.textColor),
-                fontWeight = if (preset.isBold) FontWeight.Bold else FontWeight.Normal,
-                style = TextStyle(shadow = shadow)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Badge icon + Category
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = preset.badgeIcon,
+                    fontSize = 11.sp
+                )
+                if (isSelected) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(PrimaryPurple)
+                    )
+                }
+            }
+
+            // Stylized Sample Text
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(
+                        if (preset.background != null) {
+                            Color(preset.background.color)
+                        } else {
+                            Color.Transparent
+                        }
+                    )
+                    .padding(horizontal = 4.dp, vertical = 1.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "नमस्ते",
+                    fontFamily = preset.font.toFontFamily(),
+                    fontSize = 18.sp,
+                    color = Color(preset.textColor),
+                    fontWeight = if (preset.isBold) FontWeight.Bold else FontWeight.Normal,
+                    style = TextStyle(
+                        shadow = shadow,
+                        letterSpacing = preset.letterSpacingSp.sp
+                    )
+                )
+            }
+
+            // Hindi Name
             Text(
                 text = preset.hindiName,
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 color = if (isSelected) PrimaryPurple else TextSecondary,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1
             )
         }
     }
