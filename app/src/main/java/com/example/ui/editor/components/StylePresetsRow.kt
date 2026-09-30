@@ -99,7 +99,7 @@ fun StylePresetsRow(
 
         // Category Filter Chips
         LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 1.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(PresetRepository.CATEGORIES) { category ->
@@ -107,10 +107,11 @@ fun StylePresetsRow(
                 androidx.compose.material3.FilterChip(
                     selected = isSelected,
                     onClick = { selectedCategory = category.id },
+                    modifier = Modifier.height(28.dp),
                     label = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(category.icon, fontSize = 11.sp)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(category.icon, fontSize = 10.sp)
+                            Spacer(modifier = Modifier.width(3.dp))
                             Text(category.title, fontSize = 11.sp)
                         }
                     },
@@ -125,12 +126,12 @@ fun StylePresetsRow(
             }
         }
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         // 24 Presets Horizontal List
         LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredPresets) { preset ->
                 val isSelected = preset.id == activePresetId
@@ -160,17 +161,17 @@ fun PresetCard(
 
     Box(
         modifier = Modifier
-            .width(108.dp)
-            .height(96.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .width(96.dp)
+            .height(76.dp)
+            .clip(RoundedCornerShape(12.dp))
             .background(DarkSurfaceVariant)
             .border(
                 width = if (isSelected) 2.dp else 1.dp,
                 color = if (isSelected) PrimaryPurple else DarkBorder,
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(12.dp)
             )
             .clickable(onClick = onClick)
-            .padding(8.dp),
+            .padding(horizontal = 6.dp, vertical = 5.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -201,7 +202,7 @@ fun PresetCard(
             // Stylized Sample Text
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(RoundedCornerShape(4.dp))
                     .background(
                         if (preset.background != null) {
                             Color(preset.background.color)
@@ -215,13 +216,14 @@ fun PresetCard(
                 Text(
                     text = "नमस्ते",
                     fontFamily = preset.font.toFontFamily(),
-                    fontSize = 18.sp,
+                    fontSize = 15.sp,
                     color = Color(preset.textColor),
                     fontWeight = if (preset.isBold) FontWeight.Bold else FontWeight.Normal,
                     style = TextStyle(
                         shadow = shadow,
                         letterSpacing = preset.letterSpacingSp.sp
-                    )
+                    ),
+                    maxLines = 1
                 )
             }
 

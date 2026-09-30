@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,21 +15,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FormatBold
 import androidx.compose.material.icons.filled.FormatItalic
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -163,7 +163,7 @@ fun FontPickerSheet(
     var selectedPreset by remember { mutableStateOf<TextStylePreset?>(null) }
     var isBold by remember { mutableStateOf(activeBold) }
     var isItalic by remember { mutableStateOf(activeItalic) }
-    var previewFontSizeSp by remember { mutableFloatStateOf(32f) }
+    var previewFontSizeSp by remember { mutableFloatStateOf(30f) }
     var previewText by remember { mutableStateOf(if (currentText.isBlank()) "सुंदर विचार और कलात्मक रचना" else currentText) }
     var isEditingCustomText by remember { mutableStateOf(false) }
     var selectedCategoryId by remember { mutableStateOf("all") }
@@ -179,483 +179,559 @@ fun FontPickerSheet(
         scrimColor = Color(0x99000000)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            // 1. TOP HEADER BAR (With persistent OK / Apply button!)
+            Surface(
+                color = DarkSurface,
+                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "कलात्मक टाइपोग्राफी स्टूडियो",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(PrimaryPurple.copy(alpha = 0.2f))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "12 फ़ॉन्ट्स",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = PrimaryPurple
-                            )
-                        }
-                    }
-                    Text(
-                        text = "विभिन्न शैलियों व कलात्मक प्रभावों में लाइव प्रीव्यू देखें",
-                        fontSize = 12.sp,
-                        color = TextSecondary
-                    )
-                }
-                IconButton(onClick = onDismiss) {
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = TextSecondary)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // 1. HERO LIVE PREVIEW CARD
-            val activeBg = PREVIEW_BACKGROUNDS[bgThemeIndex].first
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(activeBg))
-                    .border(1.5.dp, PrimaryPurple.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                    .padding(14.dp)
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    // Preview top info bar
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = selectedFont.hindiName,
-                                fontSize = 13.sp,
+                                text = "फ़ॉन्ट व टाइपोग्राफी",
+                                fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = PrimaryPurple
+                                color = TextPrimary
                             )
-                            Text(
-                                text = " • ${selectedFont.title}",
-                                fontSize = 11.sp,
-                                color = TextSecondary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(PrimaryPurple.copy(alpha = 0.2f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = "12 फ़ॉन्ट्स",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = PrimaryPurple
+                                )
+                            }
                         }
+                        Text(
+                            text = "चुना गया: ${selectedFont.hindiName} (${selectedFont.title})",
+                            fontSize = 12.sp,
+                            color = PrimaryPurple,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
 
-                        // Theme switcher pill
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(Color.Black.copy(alpha = 0.4f))
-                                .clickable {
-                                    bgThemeIndex = (bgThemeIndex + 1) % PREVIEW_BACKGROUNDS.size
-                                }
-                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        // TOP OK / APPLY BUTTON (Always visible at the top!)
+                        Button(
+                            onClick = {
+                                onApply(
+                                    selectedFont,
+                                    selectedPreset,
+                                    isBold,
+                                    isItalic,
+                                    previewFontSizeSp
+                                )
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryPurple),
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                            modifier = Modifier.height(36.dp)
                         ) {
                             Icon(
-                                Icons.Default.Palette,
+                                Icons.Default.Check,
                                 contentDescription = null,
-                                tint = PrimaryPurple,
-                                modifier = Modifier.size(12.dp)
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = PREVIEW_BACKGROUNDS[bgThemeIndex].second,
-                                fontSize = 10.sp,
-                                color = TextSecondary
+                                text = "OK / चुनें",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
                             )
                         }
-                    }
 
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // The Text Render Area
-                    val effectiveTextColor = if (selectedPreset != null) {
-                        Color(selectedPreset!!.textColor)
-                    } else {
-                        Color.White
-                    }
-
-                    val effectiveShadow = if (selectedPreset?.shadow != null) {
-                        Shadow(
-                            color = Color(selectedPreset!!.shadow!!.color),
-                            offset = androidx.compose.ui.geometry.Offset(
-                                selectedPreset!!.shadow!!.offsetX,
-                                selectedPreset!!.shadow!!.offsetY
-                            ),
-                            blurRadius = selectedPreset!!.shadow!!.blurRadius
-                        )
-                    } else {
-                        Shadow(
-                            color = Color(0x99000000),
-                            offset = androidx.compose.ui.geometry.Offset(2f, 2f),
-                            blurRadius = 6f
-                        )
-                    }
-
-                    val effectiveBold = selectedPreset?.isBold ?: isBold
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(96.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (selectedPreset?.background != null) {
-                                    Color(selectedPreset!!.background!!.color)
-                                } else {
-                                    Color.Transparent
-                                }
-                            )
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = previewText,
-                            fontFamily = selectedFont.toFontFamily(),
-                            fontSize = previewFontSizeSp.sp,
-                            fontWeight = if (effectiveBold) FontWeight.Bold else FontWeight.Normal,
-                            fontStyle = if (isItalic) FontStyle.Italic else FontStyle.Normal,
-                            textAlign = TextAlign.Center,
-                            color = effectiveTextColor,
-                            style = TextStyle(shadow = effectiveShadow),
-                            maxLines = 3,
-                            lineHeight = (previewFontSizeSp * 1.25f).sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Toolbar under preview: Bold, Italic, Font Size controls
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            // Bold toggle
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isBold) PrimaryPurple else Color(0x33FFFFFF))
-                                    .clickable { isBold = !isBold },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    Icons.Default.FormatBold,
-                                    contentDescription = "Bold",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-
-                            // Italic toggle
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isItalic) PrimaryPurple else Color(0x33FFFFFF))
-                                    .clickable { isItalic = !isItalic },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    Icons.Default.FormatItalic,
-                                    contentDescription = "Italic",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
+                        IconButton(
+                            onClick = onDismiss,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = "Close", tint = TextSecondary)
                         }
+                    }
+                }
+            }
 
-                        // Size controls
+            // 2. SCROLLABLE CONTENT BODY (Scrolls smoothly on all screen sizes!)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                // HERO LIVE PREVIEW CARD
+                val activeBg = PREVIEW_BACKGROUNDS[bgThemeIndex].first
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(Color(activeBg))
+                        .border(1.5.dp, PrimaryPurple.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                        .padding(12.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        // Preview top info bar
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = selectedFont.hindiName,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = PrimaryPurple
+                                )
+                                Text(
+                                    text = " • ${selectedFont.subtitle}",
+                                    fontSize = 11.sp,
+                                    color = TextSecondary,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            // Theme switcher pill
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(Color.Black.copy(alpha = 0.4f))
+                                    .clickable {
+                                        bgThemeIndex = (bgThemeIndex + 1) % PREVIEW_BACKGROUNDS.size
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Palette,
+                                    contentDescription = null,
+                                    tint = PrimaryPurple,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = PREVIEW_BACKGROUNDS[bgThemeIndex].second,
+                                    fontSize = 10.sp,
+                                    color = TextSecondary
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // The Text Render Area
+                        val effectiveTextColor = if (selectedPreset != null) {
+                            Color(selectedPreset!!.textColor)
+                        } else {
+                            Color.White
+                        }
+
+                        val effectiveShadow = if (selectedPreset?.shadow != null) {
+                            Shadow(
+                                color = Color(selectedPreset!!.shadow!!.color),
+                                offset = androidx.compose.ui.geometry.Offset(
+                                    selectedPreset!!.shadow!!.offsetX,
+                                    selectedPreset!!.shadow!!.offsetY
+                                ),
+                                blurRadius = selectedPreset!!.shadow!!.blurRadius
+                            )
+                        } else {
+                            Shadow(
+                                color = Color(0x99000000),
+                                offset = androidx.compose.ui.geometry.Offset(2f, 2f),
+                                blurRadius = 6f
+                            )
+                        }
+
+                        val effectiveBold = selectedPreset?.isBold ?: isBold
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(84.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(
+                                    if (selectedPreset?.background != null) {
+                                        Color(selectedPreset!!.background!!.color)
+                                    } else {
+                                        Color.Transparent
+                                    }
+                                )
+                                .padding(6.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "आकार: ${previewFontSizeSp.toInt()}sp",
-                                fontSize = 11.sp,
-                                color = TextSecondary
+                                text = previewText,
+                                fontFamily = selectedFont.toFontFamily(),
+                                fontSize = previewFontSizeSp.sp,
+                                fontWeight = if (effectiveBold) FontWeight.Bold else FontWeight.Normal,
+                                fontStyle = if (isItalic) FontStyle.Italic else FontStyle.Normal,
+                                textAlign = TextAlign.Center,
+                                color = effectiveTextColor,
+                                style = TextStyle(shadow = effectiveShadow),
+                                maxLines = 2,
+                                lineHeight = (previewFontSizeSp * 1.25f).sp
                             )
-                            Box(
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(Color(0x33FFFFFF))
-                                    .clickable {
-                                        if (previewFontSizeSp > 20f) previewFontSizeSp -= 4f
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("A-", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        // Toolbar under preview: Bold, Italic, Font Size controls
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (isBold) PrimaryPurple else Color(0x33FFFFFF))
+                                        .clickable { isBold = !isBold },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        Icons.Default.FormatBold,
+                                        contentDescription = "Bold",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (isItalic) PrimaryPurple else Color(0x33FFFFFF))
+                                        .clickable { isItalic = !isItalic },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        Icons.Default.FormatItalic,
+                                        contentDescription = "Italic",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                }
                             }
-                            Box(
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(Color(0x33FFFFFF))
-                                    .clickable {
-                                        if (previewFontSizeSp < 56f) previewFontSizeSp += 4f
-                                    },
-                                contentAlignment = Alignment.Center
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
-                                Text("A+", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                Text(
+                                    text = "${previewFontSizeSp.toInt()}sp",
+                                    fontSize = 11.sp,
+                                    color = TextSecondary
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(26.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(Color(0x33FFFFFF))
+                                        .clickable {
+                                            if (previewFontSizeSp > 20f) previewFontSizeSp -= 4f
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("A-", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .size(26.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(Color(0x33FFFFFF))
+                                        .clickable {
+                                            if (previewFontSizeSp < 56f) previewFontSizeSp += 4f
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("A+", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            // 2. QUICK PREVIEW TEXT / SAMPLE SELECTION
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Original Text chip
-                FilterChip(
-                    selected = !isEditingCustomText && previewText == currentText,
-                    onClick = {
-                        previewText = currentText
-                        isEditingCustomText = false
-                    },
-                    label = { Text("मूल टेक्स्ट", fontSize = 11.sp) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        containerColor = DarkBackground,
-                        selectedContainerColor = PrimaryPurple,
-                        labelColor = TextSecondary,
-                        selectedLabelColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                )
-
-                SAMPLE_PROMPTS.forEach { sample ->
+                // SAMPLE PREVIEW TEXT CHIPS
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     FilterChip(
-                        selected = !isEditingCustomText && previewText == sample,
+                        selected = !isEditingCustomText && previewText == currentText,
                         onClick = {
-                            previewText = sample
+                            previewText = currentText
                             isEditingCustomText = false
                         },
-                        label = { Text(sample, fontSize = 11.sp) },
+                        modifier = Modifier.height(28.dp),
+                        label = { Text("मूल टेक्स्ट", fontSize = 11.sp) },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = DarkBackground,
                             selectedContainerColor = PrimaryPurple,
                             labelColor = TextSecondary,
                             selectedLabelColor = Color.White
                         ),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(14.dp)
                     )
-                }
 
-                FilterChip(
-                    selected = isEditingCustomText,
-                    onClick = { isEditingCustomText = !isEditingCustomText },
-                    label = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(12.dp))
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text("कस्टम टाइप", fontSize = 11.sp)
-                        }
-                    },
-                    colors = FilterChipDefaults.filterChipColors(
-                        containerColor = DarkBackground,
-                        selectedContainerColor = SecondaryCoral,
-                        labelColor = TextSecondary,
-                        selectedLabelColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                )
-            }
+                    SAMPLE_PROMPTS.forEach { sample ->
+                        FilterChip(
+                            selected = !isEditingCustomText && previewText == sample,
+                            onClick = {
+                                previewText = sample
+                                isEditingCustomText = false
+                            },
+                            modifier = Modifier.height(28.dp),
+                            label = { Text(sample, fontSize = 11.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = DarkBackground,
+                                selectedContainerColor = PrimaryPurple,
+                                labelColor = TextSecondary,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                    }
 
-            if (isEditingCustomText) {
-                Spacer(modifier = Modifier.height(6.dp))
-                OutlinedTextField(
-                    value = previewText,
-                    onValueChange = { previewText = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    placeholder = { Text("यहाँ अपना टेक्स्ट लिखें...", fontSize = 12.sp) },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = PrimaryPurple,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedContainerColor = DarkBackground,
-                        unfocusedContainerColor = DarkBackground,
-                        focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary
-                    ),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // 3. ARTISTIC STYLE PRESETS CAROUSEL
-            Text(
-                text = "कलात्मक शैली (Artistic Styles):",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // "No Preset / Clean" chip
-                ArtisticStyleChip(
-                    title = "सादा मूल",
-                    icon = "✨",
-                    isSelected = selectedPreset == null,
-                    onClick = { selectedPreset = null }
-                )
-
-                PresetRepository.PRESETS.forEach { preset ->
-                    ArtisticStyleChip(
-                        title = preset.hindiName,
-                        icon = preset.badgeIcon,
-                        isSelected = selectedPreset?.id == preset.id,
-                        onClick = {
-                            selectedPreset = preset
-                            selectedFont = preset.font
-                        }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // 4. FONT CATEGORY CHIPS
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                FONT_CATEGORIES.forEach { category ->
-                    val isSelected = category.id == selectedCategoryId
                     FilterChip(
-                        selected = isSelected,
-                        onClick = { selectedCategoryId = category.id },
+                        selected = isEditingCustomText,
+                        onClick = { isEditingCustomText = !isEditingCustomText },
+                        modifier = Modifier.height(28.dp),
                         label = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(category.icon, fontSize = 12.sp)
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(category.title, fontSize = 11.sp)
+                                Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(11.dp))
+                                Spacer(modifier = Modifier.width(3.dp))
+                                Text("कस्टम टाइप", fontSize = 11.sp)
                             }
                         },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = DarkBackground,
-                            selectedContainerColor = PrimaryPurple,
+                            selectedContainerColor = SecondaryCoral,
                             labelColor = TextSecondary,
                             selectedLabelColor = Color.White
                         ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            enabled = true,
-                            selected = isSelected,
-                            borderColor = DarkBorder,
-                            selectedBorderColor = PrimaryPurple
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                }
+
+                if (isEditingCustomText) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = previewText,
+                        onValueChange = { previewText = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        placeholder = { Text("यहाँ अपना टेक्स्ट लिखें...", fontSize = 12.sp) },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = PrimaryPurple,
+                            unfocusedBorderColor = DarkBorder,
+                            focusedContainerColor = DarkBackground,
+                            unfocusedContainerColor = DarkBackground,
+                            focusedTextColor = TextPrimary,
+                            unfocusedTextColor = TextPrimary
                         ),
-                        shape = RoundedCornerShape(16.dp)
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            // 5. FONT CARDS LIST
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(210.dp)
-            ) {
-                items(displayedFonts) { font ->
-                    val isSelected = font == selectedFont
-                    FontTypographyCard(
-                        font = font,
-                        sampleText = previewText,
-                        isSelected = isSelected,
-                        preset = selectedPreset,
-                        onClick = {
-                            selectedFont = font
-                        }
-                    )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // 6. ACTION BAR
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                OutlinedButton(
-                    onClick = onDismiss,
+                // ARTISTIC STYLE PRESETS CAROUSEL
+                Text(
+                    text = "कलात्मक शैली (Artistic Styles):",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextSecondary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder)
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("रद्द करें", color = TextSecondary, fontSize = 14.sp)
-                }
+                    ArtisticStyleChip(
+                        title = "सादा मूल",
+                        icon = "✨",
+                        isSelected = selectedPreset == null,
+                        onClick = { selectedPreset = null }
+                    )
 
-                Button(
-                    onClick = {
-                        onApply(
-                            selectedFont,
-                            selectedPreset,
-                            isBold,
-                            isItalic,
-                            previewFontSizeSp
+                    PresetRepository.PRESETS.forEach { preset ->
+                        ArtisticStyleChip(
+                            title = preset.hindiName,
+                            icon = preset.badgeIcon,
+                            isSelected = selectedPreset?.id == preset.id,
+                            onClick = {
+                                selectedPreset = preset
+                                selectedFont = preset.font
+                            }
                         )
-                    },
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // FONT CATEGORY CHIPS
+                Row(
                     modifier = Modifier
-                        .weight(2f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryPurple)
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "✓ ${selectedFont.hindiName} लागू करें",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+                    FONT_CATEGORIES.forEach { category ->
+                        val isSelected = category.id == selectedCategoryId
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { selectedCategoryId = category.id },
+                            modifier = Modifier.height(28.dp),
+                            label = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(category.icon, fontSize = 11.sp)
+                                    Spacer(modifier = Modifier.width(3.dp))
+                                    Text(category.title, fontSize = 11.sp)
+                                }
+                            },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = DarkBackground,
+                                selectedContainerColor = PrimaryPurple,
+                                labelColor = TextSecondary,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // FONT CARDS LIST (With direct OK action on each card!)
+                Text(
+                    text = "फ़ॉन्ट चुनें (${displayedFonts.size} उपलब्ध):",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextSecondary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    displayedFonts.forEach { font ->
+                        val isSelected = font == selectedFont
+                        FontTypographyCard(
+                            font = font,
+                            sampleText = previewText,
+                            isSelected = isSelected,
+                            preset = selectedPreset,
+                            onClick = {
+                                selectedFont = font
+                            },
+                            onApplyDirect = {
+                                selectedFont = font
+                                onApply(
+                                    font,
+                                    selectedPreset,
+                                    isBold,
+                                    isItalic,
+                                    previewFontSizeSp
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // 3. BOTTOM STICKY ACTION FOOTER (Always visible pinned at the bottom!)
+            Surface(
+                color = DarkSurface,
+                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(46.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder)
+                    ) {
+                        Text("रद्द करें", color = TextSecondary, fontSize = 14.sp)
+                    }
+
+                    Button(
+                        onClick = {
+                            onApply(
+                                selectedFont,
+                                selectedPreset,
+                                isBold,
+                                isItalic,
+                                previewFontSizeSp
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(2f)
+                            .height(46.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryPurple)
+                    ) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "✓ ${selectedFont.hindiName} लागू करें (OK)",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }
@@ -671,7 +747,7 @@ private fun ArtisticStyleChip(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(10.dp),
         color = if (isSelected) PrimaryPurple.copy(alpha = 0.25f) else DarkBackground,
         border = androidx.compose.foundation.BorderStroke(
             width = if (isSelected) 1.5.dp else 1.dp,
@@ -679,14 +755,14 @@ private fun ArtisticStyleChip(
         )
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(icon, fontSize = 13.sp)
-            Spacer(modifier = Modifier.width(6.dp))
+            Text(icon, fontSize = 12.sp)
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = title,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 color = if (isSelected) PrimaryPurple else TextSecondary
             )
@@ -700,7 +776,8 @@ private fun FontTypographyCard(
     sampleText: String,
     isSelected: Boolean,
     preset: TextStylePreset?,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onApplyDirect: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -713,7 +790,7 @@ private fun FontTypographyCard(
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -730,13 +807,13 @@ private fun FontTypographyCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = font.title,
+                        text = "(${font.title})",
                         fontSize = 11.sp,
                         color = TextSecondary
                     )
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(3.dp))
 
                 // The text sample previewed in this font
                 val textColor = if (preset != null) Color(preset.textColor) else Color(0xFFE2E0EE)
@@ -750,22 +827,31 @@ private fun FontTypographyCard(
                 )
             }
 
-            // Radio / check indicator
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-                    .background(if (isSelected) PrimaryPurple else Color(0x22FFFFFF)),
-                contentAlignment = Alignment.Center
+            Spacer(modifier = Modifier.width(8.dp))
+
+            // Direct "OK / चुनें" button right on the card!
+            Button(
+                onClick = onApplyDirect,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSelected) PrimaryPurple else Color(0x336C63FF)
+                ),
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                modifier = Modifier.height(32.dp)
             ) {
-                if (isSelected) {
-                    Icon(
-                        Icons.Default.Check,
-                        contentDescription = "Selected",
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
+                Icon(
+                    Icons.Default.Done,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(13.dp)
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = if (isSelected) "OK" else "चुनें",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
         }
     }

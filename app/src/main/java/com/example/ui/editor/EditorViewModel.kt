@@ -19,6 +19,7 @@ import com.example.data.model.ImageFilterType
 import com.example.data.model.PresetRepository
 import com.example.data.model.StickerLayer
 import com.example.data.model.TextLayer
+import com.example.data.model.TextShadowConfig
 import com.example.data.model.TextStylePreset
 import com.example.util.BitmapExporter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +68,7 @@ enum class EditorTab(val title: String, val hindiTitle: String) {
     TEXT("Text", "टेक्स्ट"),
     STYLE("Styles", "स्टाइल"),
     FONTS("Fonts", "फ़ॉन्ट"),
+    SHADOW("Glow & Shadow", "ग्लो/शैडो"),
     QUOTES("Quotes", "सुविचार"),
     STICKERS("Stickers", "स्टिकर"),
     ENHANCE("Enhance", "इफ़ेक्ट"),
@@ -378,6 +380,15 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
         pushUndo()
         updateSelectedTextLayer { it.copy(font = font) }
         _uiState.update { it.copy(showFontsSheet = false) }
+    }
+
+    fun setTextShadow(shadow: TextShadowConfig?) {
+        updateSelectedTextLayer { it.copy(shadow = shadow) }
+    }
+
+    fun applyShadowPreset(shadow: TextShadowConfig?) {
+        pushUndo()
+        updateSelectedTextLayer { it.copy(shadow = shadow) }
     }
 
     fun setTextColor(color: Long) {

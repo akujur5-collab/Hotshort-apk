@@ -79,6 +79,7 @@ import com.example.ui.editor.components.EnhanceToolsView
 import com.example.ui.editor.components.ExportSheet
 import com.example.ui.editor.components.FontPickerSheet
 import com.example.ui.editor.components.QuotesPickerSheet
+import com.example.ui.editor.components.ShadowGlowAdjustmentView
 import com.example.ui.editor.components.StickerPickerSheet
 import com.example.ui.editor.components.StylePresetsRow
 import com.example.ui.editor.components.TextEditDialog
@@ -271,7 +272,7 @@ fun EditorScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(175.dp)
+                            .height(200.dp)
                             .background(DarkSurface)
                     ) {
                         when (uiState.activeTab) {
@@ -283,20 +284,34 @@ fun EditorScreen(
                                     onFontSizeChange = { viewModel.setFontSize(it) },
                                     onTextColorChange = { viewModel.setTextColor(it) },
                                     onOpenFonts = { viewModel.setShowFonts(true) },
+                                    onOpenShadow = { viewModel.setActiveTab(EditorTab.SHADOW) },
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
                             EditorTab.STYLE -> {
-                                Column(modifier = Modifier.fillMaxSize()) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .verticalScroll(rememberScrollState())
+                                        .padding(bottom = 6.dp)
+                                ) {
                                     StylePresetsRow(
                                         activePresetId = selectedTextLayer?.stylePresetId,
                                         onSelectPreset = { viewModel.applyPresetToSelected(it) }
                                     )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                     ColorPaletteRow(
                                         selectedColor = selectedTextLayer?.textColor ?: 0xFFFFFFFF,
                                         onColorSelected = { viewModel.setTextColor(it) }
                                     )
                                 }
+                            }
+                            EditorTab.SHADOW -> {
+                                ShadowGlowAdjustmentView(
+                                    selectedLayer = selectedTextLayer,
+                                    onUpdateShadow = { viewModel.setTextShadow(it) },
+                                    modifier = Modifier.fillMaxSize()
+                                )
                             }
                             EditorTab.ENHANCE -> {
                                 EnhanceToolsView(
@@ -331,6 +346,7 @@ fun EditorScreen(
                                     onFontSizeChange = { viewModel.setFontSize(it) },
                                     onTextColorChange = { viewModel.setTextColor(it) },
                                     onOpenFonts = { viewModel.setShowFonts(true) },
+                                    onOpenShadow = { viewModel.setActiveTab(EditorTab.SHADOW) },
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
@@ -423,6 +439,7 @@ fun EditorTabsBar(
     val tabs = listOf(
         Pair(EditorTab.TEXT, "टेक्स्ट"),
         Pair(EditorTab.STYLE, "स्टाइल"),
+        Pair(EditorTab.SHADOW, "ग्लो/शैडो"),
         Pair(EditorTab.FONTS, "फ़ॉन्ट"),
         Pair(EditorTab.QUOTES, "सुविचार"),
         Pair(EditorTab.STICKERS, "स्टिकर"),
@@ -468,6 +485,7 @@ fun TextToolsContent(
     onFontSizeChange: (Float) -> Unit,
     onTextColorChange: (Long) -> Unit,
     onOpenFonts: () -> Unit,
+    onOpenShadow: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -518,6 +536,38 @@ fun TextToolsContent(
 
         if (selectedLayer != null) {
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Quick Glow & Shadow access button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onOpenShadow,
+                    colors = ButtonDefaults.buttonColors(containerColor = DarkSurfaceVariant),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(34.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, PrimaryPurple.copy(alpha = 0.5f))
+                ) {
+                    Icon(
+                        Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = PrimaryPurple
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "🌟 आउटर ग्लो व 3D शैडो एडजस्ट करें",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
 
             // Font Size Slider
             Row(
