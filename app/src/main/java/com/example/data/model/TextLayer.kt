@@ -2,30 +2,47 @@ package com.example.data.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import com.example.ui.theme.AdishilaFamily
 import com.example.ui.theme.KalamFamily
+import com.example.ui.theme.KhandFamily
+import com.example.ui.theme.KohinoorDevanagariFamily
+import com.example.ui.theme.ModakFamily
 import com.example.ui.theme.MuktaFamily
+import com.example.ui.theme.NotoSansDevanagariFamily
+import com.example.ui.theme.NotoSerifDevanagariFamily
 import com.example.ui.theme.PoppinsFamily
 import com.example.ui.theme.RozhaOneFamily
+import com.example.ui.theme.TiroDevanagariHindiFamily
 import com.example.ui.theme.YatraOneFamily
 
 enum class HindiFont(val title: String, val hindiName: String, val subtitle: String) {
-    POPPINS("Poppins", "पॉपिन्स", "Bold Modern Sans"),
-    MUKTA("Mukta", "मुक्ता", "Clean Devanagari"),
+    TIRO_DEVANAGARI_HINDI("Tiro Devanagari Hindi", "तीरो देवनागरी", "Traditional Elegant Serif"),
+    KOHINOOR_DEVANAGARI("Kohinoor Devanagari", "कोहिनूर देवनागरी", "Clean Modern Sans"),
+    NOTO_SERIF_DEVANAGARI("Noto Serif Devanagari", "नोटो सेरिफ़", "Classic Editorial Serif"),
+    NOTO_SANS_DEVANAGARI("Noto Sans Devanagari", "नोटो सैन्स", "Universal Clean Sans"),
+    ADISHILA("Adishila", "आदिशिला", "Heritage Classical Type"),
     KALAM("Kalam", "कलम", "Handwritten Calligraphy"),
+    YATRA_ONE("Yatra One", "यात्रा वन", "Retro Signage Style"),
     ROZHA_ONE("Rozha One", "रोझा वन", "Royal Decorative Display"),
-    YATRA_ONE("Yatra One", "यात्रा वन", "Retro Devanagari Signage"),
-    SANS_SERIF("Sans Serif", "सरल", "System Sans"),
-    SERIF("Serif", "पारंपरिक", "System Serif");
+    KHAND("Khand", "खांड", "Bold Headline Poster"),
+    MODAK("Modak", "मोदक", "Chubby Festive Display"),
+    POPPINS("Poppins", "पॉपिन्स", "Bold Geometric Sans"),
+    MUKTA("Mukta", "मुक्ता", "Contemporary Devanagari");
 
     fun toFontFamily(): FontFamily {
         return when (this) {
+            TIRO_DEVANAGARI_HINDI -> TiroDevanagariHindiFamily
+            KOHINOOR_DEVANAGARI -> KohinoorDevanagariFamily
+            NOTO_SERIF_DEVANAGARI -> NotoSerifDevanagariFamily
+            NOTO_SANS_DEVANAGARI -> NotoSansDevanagariFamily
+            ADISHILA -> AdishilaFamily
+            KALAM -> KalamFamily
+            YATRA_ONE -> YatraOneFamily
+            ROZHA_ONE -> RozhaOneFamily
+            KHAND -> KhandFamily
+            MODAK -> ModakFamily
             POPPINS -> PoppinsFamily
             MUKTA -> MuktaFamily
-            KALAM -> KalamFamily
-            ROZHA_ONE -> RozhaOneFamily
-            YATRA_ONE -> YatraOneFamily
-            SANS_SERIF -> FontFamily.SansSerif
-            SERIF -> FontFamily.Serif
         }
     }
 }

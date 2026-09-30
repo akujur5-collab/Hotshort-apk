@@ -37,24 +37,43 @@ object BitmapExporter {
 
     fun getFontTypeface(context: Context, font: HindiFont): Typeface {
         val resId = when (font) {
+            HindiFont.TIRO_DEVANAGARI_HINDI -> R.font.tiro_devanagari_hindi
+            HindiFont.KOHINOOR_DEVANAGARI -> R.font.kohinoor_devanagari
+            HindiFont.NOTO_SERIF_DEVANAGARI -> R.font.noto_serif_devanagari
+            HindiFont.NOTO_SANS_DEVANAGARI -> R.font.noto_sans_devanagari
+            HindiFont.ADISHILA -> R.font.adishila
+            HindiFont.KALAM -> R.font.kalam
+            HindiFont.YATRA_ONE -> R.font.yatra_one
+            HindiFont.ROZHA_ONE -> R.font.rozha_one
+            HindiFont.KHAND -> R.font.khand
+            HindiFont.MODAK -> R.font.modak
             HindiFont.POPPINS -> R.font.poppins
             HindiFont.MUKTA -> R.font.mukta
-            HindiFont.KALAM -> R.font.kalam
-            HindiFont.ROZHA_ONE -> R.font.rozha_one
-            HindiFont.YATRA_ONE -> R.font.yatra_one
-            HindiFont.SANS_SERIF -> null
-            HindiFont.SERIF -> null
         }
-        return if (resId != null) {
-            try {
-                ResourcesCompat.getFont(context, resId) ?: Typeface.DEFAULT
-            } catch (e: Exception) {
-                Typeface.DEFAULT
-            }
-        } else {
-            when (font) {
-                HindiFont.SERIF -> Typeface.SERIF
-                else -> Typeface.SANS_SERIF
+        return try {
+            ResourcesCompat.getFont(context, resId) ?: Typeface.DEFAULT
+        } catch (e: Exception) {
+            Typeface.DEFAULT
+        }
+    }
+
+    fun get4KDimensions(ratio: CanvasRatio, baseBitmap: Bitmap?): Pair<Int, Int> {
+        return when (ratio) {
+            CanvasRatio.RATIO_1_1 -> 3840 to 3840
+            CanvasRatio.RATIO_9_16 -> 2160 to 3840
+            CanvasRatio.RATIO_4_5 -> 3072 to 3840
+            CanvasRatio.RATIO_16_9 -> 3840 to 2160
+            CanvasRatio.RATIO_FREE -> {
+                if (baseBitmap != null && baseBitmap.width > 0 && baseBitmap.height > 0) {
+                    val aspect = baseBitmap.width.toFloat() / baseBitmap.height
+                    if (aspect >= 1f) {
+                        3840 to maxOf(100, (3840f / aspect).toInt())
+                    } else {
+                        maxOf(100, (3840f * aspect).toInt()) to 3840
+                    }
+                } else {
+                    3840 to 3840
+                }
             }
         }
     }
@@ -65,7 +84,7 @@ object BitmapExporter {
         solidBackgroundStart: Long,
         solidBackgroundEnd: Long,
         ratio: CanvasRatio,
-        targetWidth: Int = 1080,
+        targetWidth: Int = 3840,
         textLayers: List<TextLayer>,
         stickerLayers: List<StickerLayer>,
         brightness: Float,
@@ -73,21 +92,9 @@ object BitmapExporter {
         saturation: Float,
         filterType: ImageFilterType
     ): Bitmap = withContext(Dispatchers.Default) {
-        val height = when (ratio) {
-            CanvasRatio.RATIO_1_1 -> targetWidth
-            CanvasRatio.RATIO_9_16 -> (targetWidth * 16f / 9f).toInt()
-            CanvasRatio.RATIO_4_5 -> (targetWidth * 5f / 4f).toInt()
-            CanvasRatio.RATIO_16_9 -> (targetWidth * 9f / 16f).toInt()
-            CanvasRatio.RATIO_FREE -> {
-                if (baseBitmap != null && baseBitmap.width > 0) {
-                    (targetWidth * (baseBitmap.height.toFloat() / baseBitmap.width)).toInt()
-                } else {
-                    targetWidth
-                }
-            }
-        }
+        val (finalWidth, finalHeight) = get4KDimensions(ratio, baseBitmap)
 
-        val output = Bitmap.createBitmap(targetWidth, height, Bitmap.Config.ARGB_8888)
+        val output = Bitmap.createBitmap(finalWidth, finalHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
 
         // 1. Draw Background (Image or Gradient)
@@ -99,13 +106,13 @@ object BitmapExporter {
 
             // Scale and center-crop the bitmap to fill the canvas
             val scale = maxOf(
-                targetWidth.toFloat() / baseBitmap.width,
-                height.toFloat() / baseBitmap.height
+                finalWidth.toFloat() / baseBitmap.width,
+                finalHeight.toFloat() / baseBitmap.height
             )
             val scaledWidth = baseBitmap.width * scale
             val scaledHeight = baseBitmap.height * scale
-            val left = (targetWidth - scaledWidth) / 2f
-            val top = (height - scaledHeight) / 2f
+            val left = (finalWidth - scaledWidth) / 2f
+            val top = (finalHeight - scaledHeight) / 2f
 
             canvas.drawBitmap(
                 baseBitmap,
@@ -116,23 +123,23 @@ object BitmapExporter {
         } else {
             // Draw Gradient / Solid Background
             val gradient = LinearGradient(
-                0f, 0f, targetWidth.toFloat(), height.toFloat(),
+                0f, 0f, finalWidth.toFloat(), finalHeight.toFloat(),
                 solidBackgroundStart.toInt(),
                 solidBackgroundEnd.toInt(),
                 Shader.TileMode.CLAMP
             )
             bgPaint.shader = gradient
-            canvas.drawRect(0f, 0f, targetWidth.toFloat(), height.toFloat(), bgPaint)
+            canvas.drawRect(0f, 0f, finalWidth.toFloat(), finalHeight.toFloat(), bgPaint)
         }
 
         // 2. Draw Text Layers
         textLayers.forEach { layer ->
-            drawTextLayer(context, canvas, layer, targetWidth, height)
+            drawTextLayer(context, canvas, layer, finalWidth, finalHeight)
         }
 
         // 3. Draw Sticker Layers
         stickerLayers.forEach { sticker ->
-            drawStickerLayer(canvas, sticker, targetWidth, height)
+            drawStickerLayer(canvas, sticker, finalWidth, finalHeight)
         }
 
         output
@@ -396,7 +403,7 @@ object BitmapExporter {
             uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             if (uri != null) {
                 resolver.openOutputStream(uri)?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 95, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 98, stream)
                 }
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
@@ -408,7 +415,7 @@ object BitmapExporter {
             if (!file.exists()) file.mkdirs()
             val image = File(file, filename)
             FileOutputStream(image).use { out ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 98, out)
             }
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DATA, image.absolutePath)
@@ -425,7 +432,7 @@ object BitmapExporter {
         if (!cachePath.exists()) cachePath.mkdirs()
         val file = File(cachePath, "chitralekh_share_${System.currentTimeMillis()}.jpg")
         val stream: OutputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 95, stream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 98, stream)
         stream.close()
 
         FileProvider.getUriForFile(

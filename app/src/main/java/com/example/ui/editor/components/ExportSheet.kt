@@ -89,14 +89,30 @@ fun ExportSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "4K अल्ट्रा HD एक्सपोर्ट",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFFFFD700))
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "4K UHD",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF1A1A1A)
+                            )
+                        }
+                    }
                     Text(
-                        text = "एक्सपोर्ट व शेयर (Export & Share)",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Text(
-                        text = "फुल एचडी रिज़ॉल्यूशन में तैयार",
+                        text = "3840px अल्ट्रा हाई रिज़ॉल्यूशन क्रिस्टल क्लियर क्वालिटी",
                         fontSize = 12.sp,
                         color = TextSecondary
                     )
@@ -106,7 +122,38 @@ fun ExportSheet(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // 4K Quality Guarantee Badge
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = DarkBackground,
+                border = androidx.compose.foundation.BorderStroke(1.dp, PrimaryPurple.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "✨", fontSize = 18.sp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text(
+                            text = "4K Ultra HD रिज़ॉल्यूशन (3840px)",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = PrimaryPurple
+                        )
+                        Text(
+                            text = "प्रिंट, सोशल मीडिया स्टेटस व वॉलपेपर के लिए सर्वश्रेष्ठ क्लैरिटी",
+                            fontSize = 11.sp,
+                            color = TextSecondary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
 
             // Success message banner if saved
             if (exportSuccessMessage != null) {
@@ -155,12 +202,12 @@ fun ExportSheet(
                         strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text("सेव हो रहा है...", color = Color.White)
+                    Text("4K में रेंडर और सेव हो रहा है...", color = Color.White)
                 } else {
                     Icon(Icons.Default.Download, contentDescription = null, tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "💾 गैलरी में सेव करें (Save to Gallery)",
+                        text = "💾 4K अल्ट्रा HD में सेव करें",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -198,12 +245,12 @@ fun ExportSheet(
                         strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text("शेयर तैयार हो रहा है...", color = PrimaryPurple)
+                    Text("4K शेयर तैयार हो रहा है...", color = PrimaryPurple)
                 } else {
                     Icon(Icons.Default.Share, contentDescription = null, tint = PrimaryPurple)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "📤 WhatsApp / ऐप्स पर शेयर करें",
+                        text = "📤 4K में WhatsApp / ऐप्स पर शेयर करें",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = PrimaryPurple

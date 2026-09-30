@@ -480,7 +480,7 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                     solidBackgroundStart = state.backgroundStartColor,
                     solidBackgroundEnd = state.backgroundEndColor,
                     ratio = state.ratio,
-                    targetWidth = 1080,
+                    targetWidth = 3840,
                     textLayers = state.textLayers,
                     stickerLayers = state.stickerLayers,
                     brightness = state.brightness,
@@ -506,10 +506,10 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                     it.copy(
                         isExporting = false,
                         exportedImageUri = uri,
-                        exportSuccessMessage = "सफलतापूर्वक गैलरी में सेव हो गया! (Saved to Gallery)"
+                        exportSuccessMessage = "सफलतापूर्वक 4K Ultra HD में गैलरी में सेव हो गया! (Saved in 4K UHD)"
                     )
                 }
-                onComplete(true, "गैलरी में सेव हो गया!")
+                onComplete(true, "4K Ultra HD में गैलरी में सेव हो गया!")
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update { it.copy(isExporting = false) }
@@ -528,7 +528,7 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                 solidBackgroundStart = state.backgroundStartColor,
                 solidBackgroundEnd = state.backgroundEndColor,
                 ratio = state.ratio,
-                targetWidth = 1080,
+                targetWidth = 3840,
                 textLayers = state.textLayers,
                 stickerLayers = state.stickerLayers,
                 brightness = state.brightness,

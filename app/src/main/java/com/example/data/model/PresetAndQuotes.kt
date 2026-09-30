@@ -145,6 +145,72 @@ object PresetRepository {
             stroke = TextStrokeConfig(color = 0xFFFFFFFF, strokeWidth = 1f),
             background = null,
             isBold = true
+        ),
+        TextStylePreset(
+            id = "modak_festive",
+            name = "Modak Festive",
+            hindiName = "मोदक उत्सव",
+            font = HindiFont.MODAK,
+            textColor = 0xFFFFD700,
+            shadow = TextShadowConfig(color = 0xFFD84315, offsetX = 3f, offsetY = 4f, blurRadius = 10f),
+            stroke = TextStrokeConfig(color = 0xFFBF360C, strokeWidth = 2f),
+            background = null,
+            isBold = false
+        ),
+        TextStylePreset(
+            id = "khand_impact",
+            name = "Khand Impact",
+            hindiName = "खांड इम्पैक्ट",
+            font = HindiFont.KHAND,
+            textColor = 0xFFFFFFFF,
+            shadow = TextShadowConfig(color = 0xFF000000, offsetX = 4f, offsetY = 4f, blurRadius = 6f),
+            stroke = TextStrokeConfig(color = 0xFFD32F2F, strokeWidth = 2f),
+            background = null,
+            isBold = true
+        ),
+        TextStylePreset(
+            id = "adishila_heritage",
+            name = "Adishila Heritage",
+            hindiName = "आदिशिला संस्कृत",
+            font = HindiFont.ADISHILA,
+            textColor = 0xFFFFE0B2,
+            shadow = TextShadowConfig(color = 0xAA3E2723, offsetX = 2f, offsetY = 3f, blurRadius = 6f),
+            stroke = null,
+            background = null,
+            isBold = false
+        ),
+        TextStylePreset(
+            id = "tiro_classic",
+            name = "Tiro Classic",
+            hindiName = "तीरो पारंपरिक",
+            font = HindiFont.TIRO_DEVANAGARI_HINDI,
+            textColor = 0xFFFFF9C4,
+            shadow = TextShadowConfig(color = 0xCC1B5E20, offsetX = 2f, offsetY = 3f, blurRadius = 6f),
+            stroke = null,
+            background = null,
+            isBold = false
+        ),
+        TextStylePreset(
+            id = "kohinoor_clean",
+            name = "Kohinoor Modern",
+            hindiName = "कोहिनूर मॉडर्न",
+            font = HindiFont.KOHINOOR_DEVANAGARI,
+            textColor = 0xFFFFFFFF,
+            shadow = TextShadowConfig(color = 0x99000000, offsetX = 2f, offsetY = 2f, blurRadius = 6f),
+            stroke = null,
+            background = null,
+            isBold = false
+        ),
+        TextStylePreset(
+            id = "noto_serif_gold",
+            name = "Noto Editorial",
+            hindiName = "नोटो साहित्य",
+            font = HindiFont.NOTO_SERIF_DEVANAGARI,
+            textColor = 0xFFFFECB3,
+            shadow = TextShadowConfig(color = 0xDD311B92, offsetX = 2f, offsetY = 3f, blurRadius = 8f),
+            stroke = null,
+            background = null,
+            isBold = false
         )
     )
 
@@ -270,38 +336,183 @@ object HindiQuotesRepository {
     )
 }
 
+data class StickerCategory(
+    val id: String,
+    val title: String,
+    val hindiTitle: String,
+    val icon: String
+)
+
 data class HindiSticker(
     val category: String,
     val icon: String,
-    val isDevanagariWord: Boolean = false
+    val isDevanagariWord: Boolean = false,
+    val searchKeywords: String = ""
 )
 
 object HindiStickersRepository {
+    val CATEGORIES = listOf(
+        StickerCategory("all", "All", "सभी", "✨"),
+        StickerCategory("devotional", "Devotional", "भक्ति व शुभ", "🕉️"),
+        StickerCategory("wishes", "Wishes", "शुभकामनाएं", "🎉"),
+        StickerCategory("motivation", "Motivation", "प्रेरणा व देश", "🇮🇳"),
+        StickerCategory("love_family", "Love & Relations", "रिश्ते व प्रेम", "💖"),
+        StickerCategory("aesthetic", "Decor & Nature", "प्रकृति व सजावट", "🌸")
+    )
+
     val STICKERS = listOf(
-        // Auspicious Hindi Devanagari Badges
-        HindiSticker("Hindi", "ॐ", true),
-        HindiSticker("Hindi", "श्री", true),
-        HindiSticker("Hindi", "शुभ लाभ", true),
-        HindiSticker("Hindi", "स्वास्तिक 卐", true),
-        HindiSticker("Hindi", "नमस्ते 🙏", true),
-        HindiSticker("Hindi", "राधे राधे", true),
-        HindiSticker("Hindi", "हर हर महादेव 🔱", true),
-        HindiSticker("Hindi", "जय श्री राम 🚩", true),
-        HindiSticker("Hindi", "सत्यमेव जयते", true),
-        HindiSticker("Hindi", "जय हिंद 🇮🇳", true),
-        // Emojis & Symbols
-        HindiSticker("Aesthetic", "✨"),
-        HindiSticker("Aesthetic", "⭐"),
-        HindiSticker("Aesthetic", "🪔"),
-        HindiSticker("Aesthetic", "🌸"),
-        HindiSticker("Aesthetic", "🌹"),
-        HindiSticker("Aesthetic", "❤️"),
-        HindiSticker("Aesthetic", "🔥"),
-        HindiSticker("Aesthetic", "👑"),
-        HindiSticker("Aesthetic", "💫"),
-        HindiSticker("Aesthetic", "🎯"),
-        HindiSticker("Aesthetic", "🕊️"),
-        HindiSticker("Aesthetic", "☕")
+        // === 1. DEVOTIONAL & SACRED (भक्ति व शुभ) ===
+        HindiSticker("devotional", "ॐ", true, "om aum shiv bhakti"),
+        HindiSticker("devotional", "श्री", true, "shree shri shubh"),
+        HindiSticker("devotional", "शुभ लाभ", true, "shubh laabh ganesh mangal"),
+        HindiSticker("devotional", "स्वास्तिक 卐", true, "swastik mangal"),
+        HindiSticker("devotional", "नमस्ते 🙏", true, "namaste pranam sparsh"),
+        HindiSticker("devotional", "राधे राधे", true, "radhe radhe krishna vrindavan"),
+        HindiSticker("devotional", "हर हर महादेव 🔱", true, "har har mahadev shiva bholenath"),
+        HindiSticker("devotional", "जय श्री राम 🚩", true, "jai shree ram hanuman ayodhya"),
+        HindiSticker("devotional", "ॐ नमः शिवाय", true, "om namah shivay shiv"),
+        HindiSticker("devotional", "जय माता दी", true, "jai mata di durga vaishno"),
+        HindiSticker("devotional", "महाकाल 🔱", true, "mahakal shiv ujjain"),
+        HindiSticker("devotional", "जय बजरंगबली 🚩", true, "hanuman bajrangbali"),
+        HindiSticker("devotional", "सीताराम", true, "sita ram prabhu"),
+        HindiSticker("devotional", "जय श्री कृष्णा", true, "shri krishna kanha gopal"),
+        HindiSticker("devotional", "जय जगन्नाथ", true, "jagannath puri balabhadra"),
+        HindiSticker("devotional", "वाहेगुरु ੴ", true, "waheguru ik onkar sikh"),
+        HindiSticker("devotional", "अल्लाह ☪️", true, "allah islam mubarak khuda"),
+        HindiSticker("devotional", "प्रभु येशु ✝️", true, "yeshu jesus christian bible prabhu"),
+        HindiSticker("devotional", "त्रिशूल 🔱", true, "trishul shiv bholenath"),
+        HindiSticker("devotional", "शंख 🐚", true, "shankh pooja arti"),
+        HindiSticker("devotional", "कलश 🏺", true, "kalash mangal poojan"),
+        HindiSticker("devotional", "रुद्राक्ष 📿", true, "rudraksha mala shiv"),
+        HindiSticker("devotional", "दीपक 🪔", true, "diya deepak jyot"),
+        HindiSticker("devotional", "चरण स्पर्श 🙏", true, "charan sparsh pranam aashirwad"),
+        HindiSticker("devotional", "आरती 🕯️", true, "aarti pooja diya"),
+        HindiSticker("devotional", "मोरपंख 🪶", true, "morpankh krishna kanha"),
+        HindiSticker("devotional", "कमल 🪷", true, "kamal lotus laxmi"),
+        HindiSticker("devotional", "ॐ तत्सत्", true, "om tat sat ved upanishad"),
+        HindiSticker("devotional", "हरि ॐ", true, "hari om narayan vishnu"),
+        HindiSticker("devotional", "जय भोलेनाथ", true, "bholenath shankar shiv"),
+        HindiSticker("devotional", "सत्य सनातन 🚩", true, "sanatan dharma hindutva"),
+        HindiSticker("devotional", "कण-कण में राम", true, "ram ishwar bhagwan"),
+        HindiSticker("devotional", "सत्यमेव जयते", true, "satyameva jayate satya"),
+
+        // === 2. WISHES & CELEBRATIONS (शुभकामनाएं व उत्सव) ===
+        HindiSticker("wishes", "शुभ प्रभात 🌅", true, "shubh prabhat good morning subah"),
+        HindiSticker("wishes", "शुभ रात्रि 🌙", true, "shubh ratri good night shaam"),
+        HindiSticker("wishes", "जन्मदिन मुबारक 🎂", true, "happy birthday janamdin cake badhai"),
+        HindiSticker("wishes", "हार्दिक बधाई 💐", true, "congratulations badhai shubhkaamna"),
+        HindiSticker("wishes", "मंगलमय दिन ☀️", true, "mangalmay din shubh good day"),
+        HindiSticker("wishes", "ढेरों शुभकामनाएं ✨", true, "shubhkaamnaye best wishes"),
+        HindiSticker("wishes", "शुभ दीपावली 🪔", true, "shubh deepavali diwali roshni"),
+        HindiSticker("wishes", "रंगों का त्योहार होली 🎨", true, "holi colors festival pichkari"),
+        HindiSticker("wishes", "रक्षाबंधन की बधाई 🧵", true, "rakshabandhan rakhi bhai behen"),
+        HindiSticker("wishes", "नव वर्ष मंगलमय हो 🎆", true, "happy new year nav varsh saal"),
+        HindiSticker("wishes", "ईद मुबारक 🌙", true, "eid mubarak ramadan"),
+        HindiSticker("wishes", "क्रिसमस की शुभकामनाएं 🎄", true, "merry christmas xmas"),
+        HindiSticker("wishes", "मकर संक्रांति 🪁", true, "makar sankranti kite patang"),
+        HindiSticker("wishes", "महाशिवरात्रि 🔱", true, "mahashivratri shiv parvathi"),
+        HindiSticker("wishes", "गणेश चतुर्थी 🐘", true, "ganesh chaturthi bappa moriya"),
+        HindiSticker("wishes", "कृष्ण जन्माष्टमी 🦚", true, "krishna janmashtami dahi handi"),
+        HindiSticker("wishes", "विजयदशमी दशहरा 🏹", true, "dussehra vijayadashami raavan"),
+        HindiSticker("wishes", "करवा चौथ 🌙", true, "karwa chauth suhaag chand"),
+        HindiSticker("wishes", "छठ पूजा ☀️", true, "chhath puja surya dev"),
+        HindiSticker("wishes", "लोहड़ी की बधाई 🔥", true, "lohri baisakhi punjab"),
+        HindiSticker("wishes", "साalgirah मुबारक 💍", true, "anniversary saalgirah jodi"),
+        HindiSticker("wishes", "विवाह मंगल 🎊", true, "vivah wedding shadi vivah"),
+        HindiSticker("wishes", "नया सवेरा नई उम्मीद 🌄", true, "naya savera subah aasha"),
+        HindiSticker("wishes", "खुशहाल जीवन 🌸", true, "khushiyan happiness jeevan anand"),
+
+        // === 3. MOTIVATION & PATRIOTISM (प्रेरणा व देश) ===
+        HindiSticker("motivation", "जय हिंद 🇮🇳", true, "jai hind tiranga bharat desh"),
+        HindiSticker("motivation", "वंदे मातरम 🇮🇳", true, "vande mataram rashtra geet"),
+        HindiSticker("motivation", "भारत माता की जय 🚩", true, "bharat mata desh bhakti"),
+        HindiSticker("motivation", "हौसला ज़िंदा रखो 🔥", true, "hausla courage junoon"),
+        HindiSticker("motivation", "सफलता की उड़ान 🏆", true, "safalta success victory jeet"),
+        HindiSticker("motivation", "कर्म ही पूजा है", true, "karm work worship nishkam"),
+        HindiSticker("motivation", "सकारात्मक सोच 💡", true, "positive thinking sakaratmak vichar"),
+        HindiSticker("motivation", "आत्मविश्वास 🦁", true, "self confidence sher shakti"),
+        HindiSticker("motivation", "मेहनत का फल ⭐", true, "hard work mehnat parishram"),
+        HindiSticker("motivation", "अडिग लक्ष्य 🎯", true, "target goal lakshya focus"),
+        HindiSticker("motivation", "समय मूल्यवान है ⏳", true, "samay time value waqt"),
+        HindiSticker("motivation", "विजेता संकल्प 🥇", true, "winner champ champion sankalp"),
+        HindiSticker("motivation", "ऊर्जा और उमंग ⚡", true, "energy positivity umang josh"),
+        HindiSticker("motivation", "साहस और धैर्य 💪", true, "courage sahas dhairya patience"),
+        HindiSticker("motivation", "ज्ञान ही शक्ति है 📚", true, "knowledge gyan shiksha shakti"),
+        HindiSticker("motivation", "आशा की किरण 🌟", true, "hope aasha kiran roshni"),
+        HindiSticker("motivation", "कर्मयोगी", true, "karmyogi gita karm"),
+        HindiSticker("motivation", "संघर्ष से शिखर", true, "sangharsh struggle peak unchai"),
+        HindiSticker("motivation", "सपने सच होंगे", true, "dreams come true sapne sach"),
+        HindiSticker("motivation", "असंभव कुछ नहीं", true, "impossible nothing namumkin"),
+
+        // === 4. LOVE & RELATIONS (रिश्ते, प्रेम व परिवार) ===
+        HindiSticker("love_family", "दिल से ❤️", true, "dil se heart prem pyaar"),
+        HindiSticker("love_family", "मेरी जान 💖", true, "meri jaan beloved prem"),
+        HindiSticker("love_family", "सच्चा दोस्त 🤝", true, "true friend dosti yaar mitra"),
+        HindiSticker("love_family", "प्यारा परिवार 👨‍👩‍👧‍👦", true, "family parivar ghar apno"),
+        HindiSticker("love_family", "मुस्कुराते रहो 😊", true, "smile muskaan smile hansi"),
+        HindiSticker("love_family", "अपना ख्याल रखना 🌸", true, "take care khayal dekhbhal"),
+        HindiSticker("love_family", "सदा सुखी रहो 🌼", true, "be happy sukhi anand"),
+        HindiSticker("love_family", "सुंदर यादें ✨", true, "memories yaadein lamhe"),
+        HindiSticker("love_family", "दोस्ती सदाबहार 👬", true, "friendship dosti yaari"),
+        HindiSticker("love_family", "माँ का प्यार 🤱", true, "maa mother mom pyaar aanchal"),
+        HindiSticker("love_family", "पिता का साया 👨", true, "father papa pita baap aashirwad"),
+        HindiSticker("love_family", "अटूट बंधन 💫", true, "bond rishta bandhan"),
+        HindiSticker("love_family", "कोटि धन्यवाद 🙏", true, "dhanyawad shukriya thanks aabhar"),
+        HindiSticker("love_family", "हार्दिक आशीर्वाद 🌟", true, "blessings aashirwad badon"),
+        HindiSticker("love_family", "दुआएं हमेशा 🤲", true, "dua prayers ibadat barakat"),
+        HindiSticker("love_family", "अटूट विश्वास 🤝", true, "trust vishwas bharosa"),
+        HindiSticker("love_family", "सच्चा प्यार 💕", true, "true love prem mohobbat"),
+        HindiSticker("love_family", "हमेशा साथ 👫", true, "always together saath sang"),
+
+        // === 5. DECOR & NATURE (प्रकृति, सौंदर्य व सजावट) ===
+        HindiSticker("aesthetic", "✨", false, "sparkles चमक तारा roshni"),
+        HindiSticker("aesthetic", "⭐", false, "star सितारा tara"),
+        HindiSticker("aesthetic", "🌟", false, "glowing star chamakta tara"),
+        HindiSticker("aesthetic", "💫", false, "dizzy star chamak"),
+        HindiSticker("aesthetic", "🪔", false, "diya deepak roshni deepawali"),
+        HindiSticker("aesthetic", "🌸", false, "cherry blossom phool pushp"),
+        HindiSticker("aesthetic", "🌹", false, "red rose gulab phool"),
+        HindiSticker("aesthetic", "🌺", false, "hibiscus phool gudhal"),
+        HindiSticker("aesthetic", "🌻", false, "sunflower surajmukhi"),
+        HindiSticker("aesthetic", "🌷", false, "tulip flower pushp"),
+        HindiSticker("aesthetic", "🌼", false, "daisy chameli pushp"),
+        HindiSticker("aesthetic", "🪷", false, "lotus kamal pushp laxmi"),
+        HindiSticker("aesthetic", "💐", false, "bouquet guldasta phool"),
+        HindiSticker("aesthetic", "🍃", false, "leaves patta nature prakriti"),
+        HindiSticker("aesthetic", "🌿", false, "herb paudha hara"),
+        HindiSticker("aesthetic", "🍁", false, "maple leaf patta autumn"),
+        HindiSticker("aesthetic", "🕊️", false, "dove shanti kabutar peace bird"),
+        HindiSticker("aesthetic", "🦋", false, "butterfly titli sunder"),
+        HindiSticker("aesthetic", "🦚", false, "peacock mor mayur sundar"),
+        HindiSticker("aesthetic", "🦜", false, "parrot tota pakshi"),
+        HindiSticker("aesthetic", "🌈", false, "rainbow indradhanush rang"),
+        HindiSticker("aesthetic", "☀️", false, "sun surya ravi dhoop"),
+        HindiSticker("aesthetic", "🌙", false, "moon chand chanda shaam raat"),
+        HindiSticker("aesthetic", "🔥", false, "fire aag jwala agni"),
+        HindiSticker("aesthetic", "💧", false, "water drop jal boond paani"),
+        HindiSticker("aesthetic", "🌊", false, "ocean wave sagar leher samudra"),
+        HindiSticker("aesthetic", "☕", false, "tea coffee chai pyali nashta"),
+        HindiSticker("aesthetic", "🪶", false, "feather pankh morpankh lekhani"),
+        HindiSticker("aesthetic", "📜", false, "scroll lekh shayari patr"),
+        HindiSticker("aesthetic", "🎨", false, "art palette rang kala"),
+        HindiSticker("aesthetic", "👑", false, "crown mukut raja shahi taj"),
+        HindiSticker("aesthetic", "💎", false, "diamond heera ratna gem"),
+        HindiSticker("aesthetic", "🎯", false, "target lakshya dart nishana"),
+        HindiSticker("aesthetic", "🏹", false, "bow and arrow dhanush baan teer"),
+        HindiSticker("aesthetic", "🚩", false, "flag dhwaja jhanda kesari"),
+        HindiSticker("aesthetic", "🔔", false, "bell ghanti mandir temple"),
+        HindiSticker("aesthetic", "🕯️", false, "candle mombatti roshni"),
+        HindiSticker("aesthetic", "🎁", false, "gift uphar bhent tohfa"),
+        HindiSticker("aesthetic", "🎈", false, "balloon gubbara celebration"),
+        HindiSticker("aesthetic", "🎉", false, "party popper badhai utsav"),
+        HindiSticker("aesthetic", "🎊", false, "confetti ball utsav jashn"),
+        HindiSticker("aesthetic", "🧿", false, "evil eye nazar battu suraksha"),
+        HindiSticker("aesthetic", "❤️", false, "red heart dil prem laal"),
+        HindiSticker("aesthetic", "💖", false, "sparkling heart chamakta dil"),
+        HindiSticker("aesthetic", "💛", false, "yellow gold heart peela dil"),
+        HindiSticker("aesthetic", "🤍", false, "white peace heart safed dil"),
+        HindiSticker("aesthetic", "💮", false, "white flower pushp phool"),
+        HindiSticker("aesthetic", "🎖️", false, "medal samman medal padak")
     )
 }
 
@@ -397,6 +608,26 @@ object TemplateRepository {
             sampleText = "जो मुझे सामर्थ्य देता है,\nउसमें मैं सब कुछ कर सकता हूँ।\n- फिलिप्पियों 4:13",
             font = HindiFont.POPPINS,
             defaultPresetId = "classic"
+        ),
+        BackgroundTemplate(
+            id = "festive_modak",
+            title = "Festive Celebration",
+            hindiTitle = "उत्सव मोदक",
+            primaryColor = 0xFF4A0000,
+            secondaryColor = 0xFF880E4F,
+            sampleText = "गणपति बप्पा मोरया\nमंगल मूर्ति मोरया",
+            font = HindiFont.MODAK,
+            defaultPresetId = "modak_festive"
+        ),
+        BackgroundTemplate(
+            id = "khand_banner",
+            title = "Bold Announcement",
+            hindiTitle = "खांड समाचार",
+            primaryColor = 0xFF0D1B2A,
+            secondaryColor = 0xFF1B263B,
+            sampleText = "सफलता की कुंजी\nकठिन परिश्रम है",
+            font = HindiFont.KHAND,
+            defaultPresetId = "khand_impact"
         )
     )
 }

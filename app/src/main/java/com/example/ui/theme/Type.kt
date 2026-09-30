@@ -8,7 +8,49 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.R
 
-// Local Static Google Fonts for Hindi / Devanagari typography
+// Local Static Fonts for Hindi / Devanagari typography
+val TiroDevanagariHindiFamily = FontFamily(
+    Font(R.font.tiro_devanagari_hindi, FontWeight.Normal)
+)
+
+val KohinoorDevanagariFamily = FontFamily(
+    Font(R.font.kohinoor_devanagari, FontWeight.Normal)
+)
+
+val NotoSerifDevanagariFamily = FontFamily(
+    Font(R.font.noto_serif_devanagari, FontWeight.Normal)
+)
+
+val NotoSansDevanagariFamily = FontFamily(
+    Font(R.font.noto_sans_devanagari, FontWeight.Normal)
+)
+
+val AdishilaFamily = FontFamily(
+    Font(R.font.adishila, FontWeight.Normal)
+)
+
+val KalamFamily = FontFamily(
+    Font(R.font.kalam, FontWeight.Normal),
+    Font(R.font.kalam, FontWeight.Bold)
+)
+
+val YatraOneFamily = FontFamily(
+    Font(R.font.yatra_one, FontWeight.Normal)
+)
+
+val RozhaOneFamily = FontFamily(
+    Font(R.font.rozha_one, FontWeight.Normal)
+)
+
+val KhandFamily = FontFamily(
+    Font(R.font.khand, FontWeight.Normal),
+    Font(R.font.khand, FontWeight.Bold)
+)
+
+val ModakFamily = FontFamily(
+    Font(R.font.modak, FontWeight.Normal)
+)
+
 val PoppinsFamily = FontFamily(
     Font(R.font.poppins, FontWeight.Normal),
     Font(R.font.poppins, FontWeight.Bold)
@@ -17,19 +59,6 @@ val PoppinsFamily = FontFamily(
 val MuktaFamily = FontFamily(
     Font(R.font.mukta, FontWeight.Normal),
     Font(R.font.mukta, FontWeight.Bold)
-)
-
-val KalamFamily = FontFamily(
-    Font(R.font.kalam, FontWeight.Normal),
-    Font(R.font.kalam, FontWeight.Bold)
-)
-
-val RozhaOneFamily = FontFamily(
-    Font(R.font.rozha_one, FontWeight.Normal)
-)
-
-val YatraOneFamily = FontFamily(
-    Font(R.font.yatra_one, FontWeight.Normal)
 )
 
 // App Default Typography
